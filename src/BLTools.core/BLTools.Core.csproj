@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>BLTools.core</AssemblyName>
+    <RootNamespace>BLTools.core</RootNamespace>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Luc Bolly</Authors>
+    <Company>Luc Bolly</Company>
+    <Description>A library of various extensions and utilities for .NET</Description>
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logging\LoggerMessages\**" />
+    <EmbeddedResource Remove="Logging\LoggerMessages\**" />
+    <None Remove="Logging\LoggerMessages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Converter\BLConverter.cs" />
+    <Compile Remove="Diagnostic\TraceInfo.cs" />
+    <Compile Remove="Diagnostic\TraceInfo_Build.cs" />
+    <Compile Remove="Diagnostic\TraceInfo_Support.cs" />
+    <Compile Remove="Logging\LoggerHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Converter\BLConverter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="_global_\readme.md">
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+
+</Project>
