@@ -181,7 +181,7 @@ public static class XElementExtension {
       }
       return SafeElement;
     } catch (Exception ex) {
-      Trace.WriteLineIf(IsDebug, $"Missing element {name} : {ex.Message}\r\n{xElement}");
+      Trace.WriteLineIf(IsDebug, $"Missing element {name} : {ex.Message}{Environment.NewLine}{xElement}");
       return new XElement(name);
     }
 
