@@ -51,5 +51,3 @@ public class TTraceLogger<TSource> : ALogger<TSource> where TSource : class {
 }
 
 
-
-}
