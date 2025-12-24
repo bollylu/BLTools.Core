@@ -74,7 +74,7 @@ public static class TypeExtensions {
 
 
   public static bool CanDump(this Type type) {
-    return type.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
+    return type.GetCustomAttribute<DoNotDumpAttribute>() is null;
   }
 
 }
