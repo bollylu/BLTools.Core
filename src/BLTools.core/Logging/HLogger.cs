@@ -3,7 +3,7 @@
 namespace BLTools.Core.Logging;
 public static class HLogger {
 
-  private const string DUMP_METHOD = "Dump";
+  //private const string DUMP_METHOD = "Dump";
 
   public static string BuildTitle<T>(T source, string? sourceName) {
     Type SourceType = typeof(T);
@@ -93,12 +93,12 @@ public static class HLogger {
   static internal string BuildBoxMessageFromException(string title, Exception ex, bool withStackTrace, int width = ILogger.NO_WIDTH) {
 
     if (ex is null) {
-      return BuildBox(title, $"Exception is null", width);
+      return BuildBox(title, "Exception is null", width);
     }
 
     StringBuilder sb = new();
     sb.AppendLine($"Exception type : {ex.GetType().GetNameEx()}");
-    sb.AppendLine($"Exception source : {ex.Source}");
+    sb.AppendLine($"Exception source : {ex.Source ?? "[No source available]"}");
     sb.AppendLine($"Message: {ex.Message}");
     sb.AppendLine($"TargetSite : {ex.TargetSite?.ToString() ?? ILogger.VALUE_NULL}");
     if (withStackTrace) {
@@ -126,7 +126,7 @@ public static class HLogger {
   /// <param name="width">The width of the box</param>
   /// <returns>A message in a box</returns>
   static internal string BuildBox(string title, object? message, int width = ILogger.NO_WIDTH) {
-    return message?.ToString() ?? "(null)".BoxFixedWidth(title ?? "", width) ?? "";
+    return (message?.ToString() ?? "(null)").BoxFixedWidth(title ?? "", width);
   }
 
   /***************************************************************************************************************************/

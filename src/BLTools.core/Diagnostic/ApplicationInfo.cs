@@ -34,7 +34,6 @@ public static partial class ApplicationInfo {
 
     try {
       StartupApplication = Assembly.GetEntryAssembly()?.GetName();
-
     } catch (Exception ex) {
       Text.AppendLine($"Unable to gather application information : {ex.Message}");
     }

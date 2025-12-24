@@ -1,2 +1,12 @@
 ﻿### 6.5
 - Split into small libraries
+
+### 7.0
+- Major refactoring of the core library
+- Improved performance and reduced memory usage
+- Updated dependencies to latest versions
+- Added new features for better developer experience
+- Fixed various bugs and issues reported by users
+- Enhanced documentation and examples for easier onboarding
+- Deprecated some old methods and classes for cleaner codebase
+- Improved testing coverage and reliability
