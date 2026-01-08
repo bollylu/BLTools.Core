@@ -57,6 +57,6 @@ jobs:
           nuget-version: latest
 
       - name: Publish to NuGet
-        if: startsWith(github.ref, 'refs/heads/release/')
+        if: startsWith(env.BUILD_CONFIG, 'Release')
         run: nuget push **/*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
         shell: pwsh
