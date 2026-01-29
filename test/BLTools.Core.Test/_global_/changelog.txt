@@ -1,0 +1,15 @@
+﻿* 1.0.0
+- Conversion from previous version 4.5.28, to .NET 6.x only
+- Added TABout, _global_ folder
+- Tests for TChrono
+- New tests for IJson
+- New tests for ILogger
+- Reorganization of namespaces as BLTools.Test.xxxxxx
+
+* 1.1.0
+- Added Tests for Diagnostic.Dump()
+- Build and execute for .NET 7.x only
+
+### 2.0.0
+- Migration of the test projects to .NET 9.x and .NET 10.x
+- Updated all test projects to use the latest versions of dependencies

@@ -18,6 +18,12 @@ public static class FieldInfoExtension {
   public static bool HasAttribute<T>(this FieldInfo field) {
     return Attribute.GetCustomAttribute(field, typeof(T)) is not null;
   }
+
+  /// <summary>
+  /// Check if a field can be dumped
+  /// </summary>
+  /// <param name="fieldInfo">The field info to check</param>
+  /// <returns><see langword="true"/> if the field can be dumped, <see langword="false"/> otherwise</returns>
   public static bool CanDump(this FieldInfo fieldInfo) {
     return !fieldInfo.HasAttribute<DoNotDumpAttribute>();
   }

@@ -21,7 +21,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   /// Locking mechanism
   /// </summary>
   [DoNotDump]
-  protected readonly object _Lock = new object();
+  protected readonly Lock _Lock = new();
 
   #region --- Caller --------------------------------------------
   /// <summary>
@@ -56,7 +56,30 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
     Options = logger.Options;
   }
 
+  private bool disposedValue;
+
+  protected virtual void Dispose(bool disposing) {
+    if (!disposedValue) {
+      if (disposing) {
+      }
+
+      // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+      // TODO: set large fields to null
+      disposedValue = true;
+    }
+  }
+
+  // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+  // ~ALogger()
+  // {
+  //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+  //     Dispose(disposing: false);
+  // }
+
   public void Dispose() {
+    // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    Dispose(disposing: true);
+    GC.SuppressFinalize(this);
   }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
@@ -77,7 +100,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   /// <param name="source">The source of the log</param>
   /// <param name="severity">The severity</param>
   /// <returns></returns>
-  protected virtual string _BuildLogLine(string text, string source = "", ESeverity severity = ESeverity.Info) {
+  protected virtual string BuildLogLine(string text, string source = "", ESeverity severity = ESeverity.Info) {
 
     string CleanedText = text.Replace("\r\n", "\n").Trim('\r', '\n', ' ', '\t');
     StringBuilder Builder = new StringBuilder();
@@ -108,7 +131,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   /// <param name="source">The source of the text</param>
   /// <param name="severity">The severity of the log</param>
   /// <exception cref="TimeoutException"></exception>
-  protected abstract void _LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info);
+  protected abstract void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info);
 
   protected int GetWidth(int width) => width <= 0 ? Options.BoxWidth : width;
   #endregion --- Internal processing --------------------------------------------
@@ -117,10 +140,10 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   public void Log<TData>(TData something, [CallerMemberName] string callerName = "", ESeverity severity = ESeverity.Info) {
     switch (something) {
       case string SomeString:
-        _LogText(SomeString ?? ILogger.VALUE_NULL, Caller(callerName), severity);
+        LogText(SomeString ?? ILogger.VALUE_NULL, Caller(callerName), severity);
         break;
       default:
-        _LogText(something?.ToString() ?? ILogger.VALUE_NULL, Caller(callerName), severity);
+        LogText(something?.ToString() ?? ILogger.VALUE_NULL, Caller(callerName), severity);
         break;
     }
   }
@@ -128,16 +151,16 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   public void LogBox<TData>(string title, TData something, [CallerMemberName] string callerName = "", int width = ILogger.NO_WIDTH, ESeverity severity = ESeverity.Info) {
     switch (something) {
       case string SomeString:
-        _LogText(SomeString.BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
+        LogText(SomeString.BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
         break;
       case IDictionary SomeDictionary:
-        _LogText(SomeDictionary.ListDictionaryItems().BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
+        LogText(SomeDictionary.ListDictionaryItems().BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
         break;
       case IEnumerable SomeEnumerable:
-        _LogText(SomeEnumerable.CombineToString(Environment.NewLine).BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
+        LogText(SomeEnumerable.CombineToString(Environment.NewLine).BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
         break;
       default:
-        _LogText(something?.ToString() ?? ILogger.VALUE_NULL.BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
+        LogText(something?.ToString() ?? ILogger.VALUE_NULL.BoxFixedWidth(title, GetWidth(width)), Caller(callerName), severity);
         break;
     }
   }
@@ -251,5 +274,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
 
     Log(TextBox.Render(), caller);
   }
-  #endregion --- Special for tests -----------------------------------------
+
+    
+    #endregion --- Special for tests -----------------------------------------
 }

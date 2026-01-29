@@ -1,15 +1,13 @@
 ﻿using System.Text;
 
-using BLTools.Core.Text;
-
-namespace BLTools.Test._Support_;
+namespace BLTools.Core.Test._Support_;
 
 public static class ConsoleHelper {
 
   #region --- Support --------------------------------------------
   private static readonly TextWriter ConsoleOut = Console.Out;
 
-  private static readonly object ConsoleLock = new object();
+  private static readonly Lock ConsoleLock = new Lock();
 
   internal static string CaptureConsoleOutput(Action action) {
     StringBuilder RetVal = new();

@@ -1,4 +1,4 @@
-﻿using static BLTools.Test._Support_.ConsoleHelper;
+﻿using static BLTools.Core.Test._Support_.ConsoleHelper;
 
 namespace BLTools.Core.Logging.Test;
 

@@ -7,30 +7,22 @@ namespace BLTools.Core;
 /// If values are specified, they are separated from the keyword by an = sign.
 /// (c) 2004-2012 Luc Bolly
 /// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "")]
 public class SplitArgs : ISplitArgs {
 
   /// <summary>
   /// The keys/values internal storage
   /// </summary>
-  protected List<IArgElement> _Items = new List<IArgElement>();
+  protected List<IArgElement> _Items = [];
 
   /// <summary>
   /// Default culture for conversions
   /// </summary>
-  public readonly static CultureInfo DEFAULT_CULTURE = CultureInfo.InvariantCulture;
+  public readonly static CultureInfo DEFAULT_CULTURE_INFO = CultureInfo.InvariantCulture;
 
   #region Public properties
   /// <inheritdoc/>
-  public CultureInfo CurrentCultureInfo {
-    get {
-      return _CurrentCultureInfo ??= DEFAULT_CULTURE;
-    }
-    set {
-      _CurrentCultureInfo = value;
-    }
-  }
-  private CultureInfo? _CurrentCultureInfo;
+  public CultureInfo CurrentCultureInfo {get; set { field = value ?? DEFAULT_CULTURE_INFO; } } = DEFAULT_CULTURE_INFO;
+  
 
   /// <inheritdoc/>
   public bool IsCaseSensitive { get; set; } = false;
@@ -48,48 +40,6 @@ public class SplitArgs : ISplitArgs {
   /// </summary>
   public SplitArgs() {
   }
-
-  ///// <summary>
-  ///// Creates a dictonnary of command line arguments from the args parameters list provided to Main function
-  ///// </summary>
-  ///// <param name="arrayOfValues">An array of parameters</param>
-  //[Obsolete("Use empty constructor + Parse(args)")]
-  //public SplitArgs(IEnumerable<string> arrayOfValues) {
-  //  if (arrayOfValues == null) {
-  //    throw new ArgumentNullException(nameof(arrayOfValues), "you must pass a valid IEnumerable[] arrayOfValues argument");
-  //  }
-  //  Parse(arrayOfValues);
-  //}
-
-  ///// <summary>
-  ///// Creates a dictionnary of command line parameters from a given command line 
-  ///// </summary>
-  ///// <param name="cmdLine">The command line</param>
-  //[Obsolete("Use empty constructor + Parse(cmdLine)")]
-  //public SplitArgs(string cmdLine) {
-  //  Parse(cmdLine);
-  //}
-
-  ///// <summary>
-  ///// Copy constructor
-  ///// </summary>
-  ///// <param name="otherSplitArgs"></param>
-  //public SplitArgs(ISplitArgs otherSplitArgs) {
-  //  Separator = otherSplitArgs.Separator;
-  //  KeyValueSeparator = otherSplitArgs.KeyValueSeparator;
-  //  IsCaseSensitive = otherSplitArgs.IsCaseSensitive;
-  //  CurrentCultureInfo = otherSplitArgs.CurrentCultureInfo;
-  //  _Items.AddRange(otherSplitArgs.GetAll());
-  //}
-
-  ///// <summary>
-  ///// Create a dictionnary of url parameters from a Request.QueryString
-  ///// </summary>
-  ///// <param name="queryStringItems">A Request.QueryString</param>
-  //[Obsolete("Use empty constructor + Parse(queryStringItems)")]
-  //public SplitArgs(NameValueCollection queryStringItems) {
-  //  Parse(queryStringItems);
-  //}
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   #region --- Converters -------------------------------------------------------------------------------------
@@ -115,7 +65,7 @@ public class SplitArgs : ISplitArgs {
     #endregion Validate parameters
 
     string PreprocessedLine = cmdLine.Trim();
-    List<string> CmdLineValues = new();
+    List<string> CmdLineValues = [];
     StringBuilder TempStr = new StringBuilder();
 
     int i = 0;
@@ -169,7 +119,7 @@ public class SplitArgs : ISplitArgs {
     foreach (string ValueItem in arrayOfValues) {
       string ValueItemProcessed;
 
-      if (ValueItem.StartsWith("/") || ValueItem.StartsWith("-")) {
+      if (ValueItem.StartsWith('/') || ValueItem.StartsWith('-')) {
         ValueItemProcessed = ValueItem[1..];
       } else {
         ValueItemProcessed = ValueItem;
@@ -215,7 +165,7 @@ public class SplitArgs : ISplitArgs {
 
   /// <inheritdoc/>
   public int Count() {
-    return _Items.Count();
+    return _Items.Count;
   }
 
   /// <inheritdoc/>
@@ -273,7 +223,7 @@ public class SplitArgs : ISplitArgs {
       CurrentElement = _Items.FirstOrDefault(a => a.Name == key);
     } else {
       string KeyLower = key.ToLower(CurrentCultureInfo);
-      CurrentElement = _Items.FirstOrDefault(a => a.Name.ToLower(CurrentCultureInfo) == KeyLower);
+      CurrentElement = _Items.FirstOrDefault(a => a.Name.Equals(KeyLower, StringComparison.CurrentCultureIgnoreCase));
     }
     return CurrentElement != null;
   }
@@ -291,7 +241,7 @@ public class SplitArgs : ISplitArgs {
     if (IsCaseSensitive) {
       CurrentElement = _Items.FirstOrDefault(a => a.Name == key);
     } else {
-      CurrentElement = _Items.FirstOrDefault(a => a.Name.ToLower(CurrentCultureInfo) == key.ToLower(CurrentCultureInfo));
+      CurrentElement = _Items.FirstOrDefault(a => a.Name.Equals(key, StringComparison.CurrentCultureIgnoreCase));
 
     }
     return CurrentElement?.HasValue() ?? false;

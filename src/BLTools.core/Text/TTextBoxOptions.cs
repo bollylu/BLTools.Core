@@ -4,27 +4,25 @@ public class TTextBoxOptions {
 
   public const int DEFAULT_WIDTH = 80;
   public const int DEFAULT_MARGIN = 0;
+  private const char DEFAULT_FILLER = ' ';
+  private const ETextBoxAlignment DEFAULT_ALIGNMENT = ETextBoxAlignment.Left;
+  private const ETextBoxType DEFAULT_TEXTBOX_TYPE = ETextBoxType.Standard;
+  private static readonly TTextBoxBorder DEFAULT_BORDER = TTextBoxBorder.Standard;
+  private const bool DEFAULT_IS_DYNAMIC_WIDTH = false;
 
-  private int _Width = DEFAULT_WIDTH;
-  public int Width { get => _Width; set => _Width = value.WithinLimits(10, 512); }
+  public int Width { get; set => field = value.WithinLimits(10, 512); } = DEFAULT_WIDTH;
 
-  private int _Margin = DEFAULT_MARGIN;
-  public int Margin { get => _Margin; set => _Margin = value.WithinLimits(0, 20); }
+  public int Margin { get; set => field = value.WithinLimits(0, 20); } = DEFAULT_MARGIN;
 
-  private char _Filler = ' ';
-  public char Filler { get => _Filler; set => _Filler = value; }
+  public char Filler { get; set; } = DEFAULT_FILLER;
 
-  private ETextBoxAlignment _Alignment = ETextBoxAlignment.Left;
-  public ETextBoxAlignment Alignment { get => _Alignment; set => _Alignment = value; }
+  public ETextBoxAlignment Alignment { get; set; } = DEFAULT_ALIGNMENT;
 
-  private ETextBoxType _TextBoxType = ETextBoxType.Standard;
-  public ETextBoxType TextBoxType { get => _TextBoxType; set => _TextBoxType = value; }
+  public ETextBoxType TextBoxType { get; set; } = DEFAULT_TEXTBOX_TYPE;
 
-  private TTextBoxBorder _Border = TTextBoxBorder.Standard;
-  public TTextBoxBorder Border { get => _Border; set => _Border = value; }
+  public TTextBoxBorder Border { get; set; } = DEFAULT_BORDER;
 
-  private bool _IsDynamicWidth = false;
-  public bool IsDynamicWidth { get => _IsDynamicWidth; set => _IsDynamicWidth = value; }
+  public bool IsDynamicWidth { get; set; } = DEFAULT_IS_DYNAMIC_WIDTH;
 
   public static TTextBoxOptions Default => new TTextBoxOptions() { };
 }

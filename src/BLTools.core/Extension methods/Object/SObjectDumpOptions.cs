@@ -2,32 +2,21 @@
 
 public struct SObjectDumpOptions {
 
-  public int MaxDepth { get => _MaxDepth; set { _MaxDepth = value.WithinLimits(0, 10); } }
-  private int _MaxDepth = 4;
+  public int MaxDepth { get; set { field = value.WithinLimits(0, 10); } } = 4;
 
-  private int _BoxWidth = 120;
-  public int BoxWidth { get => _BoxWidth; set { _BoxWidth = value.WithinLimits(10, 512); } }
+  public int BoxWidth { get; set { field = value.WithinLimits(10, 512); } } = 120;
 
-  private bool _DumpPrivateFields = false;
-  public bool DumpPrivateFields { get => _DumpPrivateFields; set => _DumpPrivateFields = value; }
+  public bool DumpPrivateFields { get; set; } = false;
+  public bool DumpPrivateProperties { get; set; } = false;
 
-  private bool _DumpPrivateProperties = false;
-  public bool DumpPrivateProperties { get => _DumpPrivateProperties; set => _DumpPrivateProperties = value; }
+  public bool DumpPublicFields { get; set; } = true;
+  public bool DumpPublicProperties { get; set; } = true;
 
-  private bool _DumpPublicFields = true;
-  public bool DumpPublicFields { get => _DumpPublicFields; set => _DumpPublicFields = value; }
+  public bool WithTitle { get; set; } = false;
 
-  private bool _DumpPublicProperties = true;
-  public bool DumpPublicProperties { get => _DumpPublicProperties; set => _DumpPublicProperties = value; }
+  public CultureInfo Culture { get; set; } = CultureInfo.InvariantCulture;
 
-  private bool _WithTitle = false;
-  public bool WithTitle { get => _WithTitle; set => _WithTitle = value; }
-
-  private CultureInfo _Culture = CultureInfo.InvariantCulture;
-  public CultureInfo Culture { get => _Culture; set => _Culture = value; }
-
-  private bool _WithColors = false;
-  public bool WithColors { get => _WithColors; set => _WithColors = value; }
+  public bool WithColors { get; set; } = false;
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
   public SObjectDumpOptions() { }

@@ -16,7 +16,7 @@ public static class DictionaryExtension {
   /// <param name="key">The key</param>
   /// <param name="defaultValue">The value to return in case of error</param>
   /// <returns>The requested value or the default value in case of error</returns>
-  public static T? SafeGetValue<K, T>(this IDictionary<K, T> source, K key, T? defaultValue) {
+  public static T? SafeGetValue<K, T>(this IDictionary<K, T> source, K? key, T? defaultValue) {
 
     if (key is null) {
       return defaultValue;

@@ -17,28 +17,6 @@ public static class XElementExtension {
   // Attributes
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  ///// <summary>
-  ///// Obtains the value of an typed attribute value from an XElement with a default value in case of error.
-  ///// </summary>
-  ///// <typeparam name="T">Type of the returned value</typeparam>
-  ///// <param name="xElement">The source XElement</param>
-  ///// <param name="name">The name of the attribute</param>
-  ///// <returns>The attribute value in the requested type or the specified default value</returns>
-  //public static T SafeReadAttribute<T>(this XElement xElement, string name) {
-  //  return SafeReadAttribute<T>(xElement, name, default(T), CultureInfo.CurrentCulture);
-  //}
-
-  ///// <summary>
-  ///// Obtains the value of an typed attribute value from an XElement with a default value in case of error.
-  ///// </summary>
-  ///// <typeparam name="T">Type of the returned value</typeparam>
-  ///// <param name="xElement">The source XElement</param>
-  ///// <param name="name">The name of the attribute</param>
-  ///// <returns>The attribute value in the requested type or the specified default value</returns>
-  //public static T SafeReadAttribute<T>(this XElement xElement, XName name) {
-  //  return SafeReadAttribute<T>(xElement, name, default(T), CultureInfo.CurrentCulture);
-  //}
-
   /// <summary>
   /// Obtains the value of an typed attribute value from an XElement with a default value in case of error.
   /// </summary>
@@ -190,28 +168,6 @@ public static class XElementExtension {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Element as value
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  ///// <summary>
-  ///// Obtains the value of an inner XElement value from an XElement with a default value in case of error.
-  ///// </summary>
-  ///// <typeparam name="T">Type of the returned value</typeparam>
-  ///// <param name="xElement">The source XElement</param>
-  ///// <param name="name">The name of the inner XElemnt</param>
-  ///// <returns>The inner XElement value in the requested type or the specified default value</returns>
-  //public static T SafeReadElementValue<T>(this XElement xElement, string name) {
-  //  return SafeReadElementValue<T>(xElement, name, default(T), CultureInfo.CurrentCulture);
-  //}
-
-  ///// <summary>
-  ///// Obtains the value of an inner XElement value from an XElement with a default value in case of error.
-  ///// </summary>
-  ///// <typeparam name="T">Type of the returned value</typeparam>
-  ///// <param name="xElement">The source XElement</param>
-  ///// <param name="name">The name of the inner XElemnt</param>
-  ///// <returns>The inner XElement value in the requested type or the specified default value</returns>
-  //public static T SafeReadElementValue<T>(this XElement xElement, XName name) {
-  //  return SafeReadElementValue<T>(xElement, name, default(T), CultureInfo.CurrentCulture);
-  //}
 
   /// <summary>
   /// Obtains the value of an inner XElement value from an XElement with a default value in case of error.

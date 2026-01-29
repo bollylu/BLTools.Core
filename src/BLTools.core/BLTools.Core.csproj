@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>BLTools.core</AssemblyName>
     <RootNamespace>BLTools.core</RootNamespace>
-    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Luc Bolly</Authors>
     <Company>Luc Bolly</Company>
@@ -22,15 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Converter\BLConverter.cs" />
     <Compile Remove="Diagnostic\TraceInfo.cs" />
     <Compile Remove="Diagnostic\TraceInfo_Build.cs" />
     <Compile Remove="Diagnostic\TraceInfo_Support.cs" />
     <Compile Remove="Logging\LoggerHelper.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Converter\BLConverter.cs" />
   </ItemGroup>
 
   <ItemGroup>

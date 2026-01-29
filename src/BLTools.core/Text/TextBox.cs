@@ -159,8 +159,8 @@ public static class TextBox {
       }
     }
 
-    if (title.Length > MaxLength + margin * 2 - 2) {
-      title = title.Left(MaxLength + margin * 2 - 2);
+    if (title.Length > MaxLength + (margin * 2) - 2) {
+      title = title.Left(MaxLength + (margin * 2) - 2);
     }
 
     if (title.IsEmpty()) {
@@ -251,8 +251,8 @@ public static class TextBox {
         string WorkString = StringItem.Substring(StartPtr, Math.Min(StringItem.Length - StartPtr, InnerWidth));
         StartPtr += WorkString.Length;
 
-        int LeftPadding = 0;
-        int RightPadding = 0;
+        int LeftPadding;
+        int RightPadding;
 
         switch (alignment) {
           case ETextBoxAlignment.Left:
@@ -289,9 +289,7 @@ public static class TextBox {
   /// <returns>A string with the box and the message</returns>
   public static string BuildFixedWidth(string sourceString, string title, int width, ETextBoxAlignment alignment = ETextBoxAlignment.Center, char filler = ' ', string border = "") {
     #region Validate parameters
-    if (title is null) {
-      title = "";
-    }
+    title ??= "";
 
     if (width <= 0) {
       width = DEFAULT_FIXED_WIDTH;
@@ -336,8 +334,8 @@ public static class TextBox {
         string WorkString = StringItem.Substring(StartPtr, Math.Min(StringItem.Length - StartPtr, InnerWidth));
         StartPtr += WorkString.Length;
 
-        int LeftPadding = 0;
-        int RightPadding = 0;
+        int LeftPadding;
+        int RightPadding;
 
         switch (alignment) {
           case ETextBoxAlignment.Left:

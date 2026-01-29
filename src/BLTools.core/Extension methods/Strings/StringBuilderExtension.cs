@@ -4,6 +4,11 @@
 /// Extensions for StringBuilder
 /// </summary>
 public static class StringBuilderExtensions {
+
+  private const string CRLF = "\r\n";
+  private const char TAB = '\t';
+  private const char SPACE = ' ';
+
   /// <summary>
   /// Removes n characters from the end of the StringBuilder
   /// </summary>
@@ -27,7 +32,7 @@ public static class StringBuilderExtensions {
   /// <param name="source">The string builder</param>
   /// <returns></returns>
   public static StringBuilder Trim(this StringBuilder source) {
-    return source.Trim(' ', '\t');
+    return source.Trim(SPACE, TAB);
   }
 
   /// <summary>
@@ -36,7 +41,7 @@ public static class StringBuilderExtensions {
   /// <param name="source">The string builder</param>
   /// <returns></returns>
   public static StringBuilder TrimLeft(this StringBuilder source) {
-    return source.TrimLeft(' ', '\t');
+    return source.TrimLeft(SPACE, TAB);
   }
 
   /// <summary>
@@ -45,7 +50,7 @@ public static class StringBuilderExtensions {
   /// <param name="source">The string builder</param>
   /// <returns></returns>
   public static StringBuilder TrimAll(this StringBuilder source) {
-    return source.TrimAll(' ', '\t');
+    return source.TrimAll(SPACE, TAB);
   }
 
   /// <summary>
@@ -62,7 +67,7 @@ public static class StringBuilderExtensions {
       return source;
     }
 
-    while (chars.Contains(source[source.Length - 1])) {
+    while (chars.Contains(source[^1])) {
       source = source.Remove(source.Length - 1, 1);
     }
 
@@ -105,7 +110,7 @@ public static class StringBuilderExtensions {
       return source;
     }
 
-    while (chars.Contains(source[source.Length - 1])) {
+    while (chars.Contains(source[^1])) {
       source = source.Remove(source.Length - 1, 1);
     }
 
@@ -125,7 +130,7 @@ public static class StringBuilderExtensions {
   /// <returns>A StringBuilder</returns>
   public static StringBuilder AppendIndent(this StringBuilder builder, string source, int indent = 2) {
     string IndentSpace = new string(' ', indent);
-    foreach (ReadOnlySpan<char> LineItem in source.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)) {
+    foreach (ReadOnlySpan<char> LineItem in source.Split(CRLF, StringSplitOptions.RemoveEmptyEntries)) {
       builder.AppendLine($"{IndentSpace}{LineItem}");
     }
     return builder;
@@ -141,7 +146,7 @@ public static class StringBuilderExtensions {
   public static StringBuilder AppendIndent(this StringBuilder builder, object source, int indent = 2) {
     string IndentSpace = new string(' ', indent);
     string DisplayData = source?.ToString() ?? "";
-    foreach (string LineItem in DisplayData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)) {
+    foreach (string LineItem in DisplayData.Split(CRLF, StringSplitOptions.RemoveEmptyEntries)) {
       builder.AppendLine($"{IndentSpace}{LineItem}");
     }
     return builder;

@@ -3,7 +3,7 @@
 /// <summary>
 /// Convert data
 /// </summary>
-public static class BLConverter : ILoggable {
+public static class BLConverter {
 
   /// <summary>
   /// Set to true to obtain additional debug info
@@ -97,7 +97,7 @@ public static class BLConverter : ILoggable {
         _ => (T)Convert.ChangeType(source, typeof(T))
       };
     } catch (Exception ex) {
-      Logger.LogError($"Error during conversion of {source?.ToString()?.WithQuotes()} to {typeof(T).Name}", ex);
+      Logger.LogErrorBox($"Error during conversion of {source?.ToString()?.WithQuotes()} to {typeof(T).Name}", ex);
       return defaultValue;
     }
   }

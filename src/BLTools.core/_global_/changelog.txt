@@ -10,3 +10,9 @@
 - Enhanced documentation and examples for easier onboarding
 - Deprecated some old methods and classes for cleaner codebase
 - Improved testing coverage and reliability
+
+### 7.0.1
+- Removed the PreviewFeatures flag from the project file
+- Fixed minor bugs and improved stability
+- Added ConsoleX static class for enhanced console operations
+- Added AnsiColorExtensions for extended ANSI color support

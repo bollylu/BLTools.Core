@@ -66,13 +66,13 @@ public static partial class ApplicationInfo {
   /// <summary>
   /// List of prefixes to ignore when asking for list of referenced assemblies
   /// </summary>
-  public static List<string> ExcludedAssemblies = new List<string>() {
+  public static readonly List<string> ExcludedAssemblies = [
     "System",
     "Microsoft",
     "netstandard",
     "Newtonsoft.json",
     "Nuget"
-  };
+  ];
 
   /// <summary>
   /// Builds a string with startup information

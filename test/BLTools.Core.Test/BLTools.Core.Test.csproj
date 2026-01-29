@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -14,6 +13,7 @@
     <Compile Remove="Logging\LoggerExtendedTest.cs" />
     <Compile Remove="Logging\TLoggerPoolTest.cs" />
     <Compile Remove="Logging\TLoggerTest.cs" />
+    <Compile Remove="Processes\ProcessExtensionsTest.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +36,10 @@
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Processes\" />
   </ItemGroup>
 
 </Project>

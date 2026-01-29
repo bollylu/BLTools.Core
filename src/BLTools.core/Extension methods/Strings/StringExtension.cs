@@ -112,7 +112,7 @@ public static partial class StringExtensions {
       return string.Empty;
     }
 
-    return sourceString.Substring(Index + delimiter.Length);
+    return sourceString[(Index + delimiter.Length)..];
   }
 
   /// <summary>
@@ -130,11 +130,11 @@ public static partial class StringExtensions {
     #endregion Validate parameters
 
     if (sourceString.SequenceEqual(delimiter)) {
-      return ReadOnlySpan<char>.Empty;
+      return [];
     }
     int Index = sourceString.IndexOf(delimiter, stringComparison);
     if (Index == -1) {
-      return ReadOnlySpan<char>.Empty;
+      return [];
     }
 
     return sourceString[(Index + delimiter.Length)..];
@@ -224,7 +224,7 @@ public static partial class StringExtensions {
       return string.Empty;
     }
 
-    return sourceString.Slice(Index + delimiter.Length);
+    return sourceString[(Index + delimiter.Length)..];
   }
 
   /// <summary>
@@ -401,12 +401,12 @@ public static partial class StringExtensions {
     #endregion Validate parameters
 
     if (source.SequenceEqual(delimiter)) {
-      return ReadOnlySpan<char>.Empty;
+      return [];
     }
 
     int Index = source.LastIndexOf(delimiter, stringComparison);
     if (Index < 1) {
-      return ReadOnlySpan<char>.Empty;
+      return [];
     }
 
     return source[..Index];
@@ -539,7 +539,7 @@ public static partial class StringExtensions {
 
     string ProcessedString = sourceString;
 
-    while (ProcessedString != "" && ProcessedString.IndexOf(firstDelimiter, stringComparison) != -1 && ProcessedString.IndexOf(secondDelimiter, stringComparison) != -1) {
+    while (ProcessedString != "" && ProcessedString.Contains(firstDelimiter, stringComparison) && ProcessedString.Contains(secondDelimiter, stringComparison)) {
       yield return ProcessedString.After(firstDelimiter, stringComparison).Before(secondDelimiter, stringComparison);
       ProcessedString = ProcessedString.After(secondDelimiter, stringComparison);
     }
@@ -564,7 +564,7 @@ public static partial class StringExtensions {
 
     string ProcessedString = sourceString;
 
-    while (ProcessedString != "" && ProcessedString.IndexOf(firstDelimiter) != -1 && ProcessedString.IndexOf(secondDelimiter) != -1) {
+    while (ProcessedString != "" && ProcessedString.Contains(firstDelimiter) && ProcessedString.Contains(secondDelimiter)) {
       yield return ProcessedString.After(firstDelimiter).Before(secondDelimiter);
       ProcessedString = ProcessedString.After(secondDelimiter);
     }
@@ -589,7 +589,7 @@ public static partial class StringExtensions {
       yield return sourceString;
     }
     #endregion === Validate parameters ===
-    foreach (string SplitItem in sourceString.Split(new string[] { delimiter }, stringSplitOptions)) {
+    foreach (string SplitItem in sourceString.Split(delimiter, stringSplitOptions)) {
       yield return SplitItem;
     }
   }
@@ -618,7 +618,7 @@ public static partial class StringExtensions {
 
     string[] Words = sourceValue.Split(delimiter);
     foreach (string WordItem in Words) {
-      RetVal.Append($"{WordItem.Left(1).ToUpper()}{WordItem.Substring(1).ToLower()}{delimiter}");
+      RetVal.Append($"{WordItem.Left(1).ToUpper()}{WordItem[1..].ToLower()}{delimiter}");
     }
     RetVal.Truncate(1);
 
@@ -641,11 +641,11 @@ public static partial class StringExtensions {
 
     StringBuilder RetVal = new StringBuilder(sourceValue);
 
-    if (sourceValue.StartsWith("\"")) {
+    if (sourceValue.StartsWith('\"')) {
       RetVal.Remove(0, 1);
     }
 
-    if (sourceValue.EndsWith("\"")) {
+    if (sourceValue.EndsWith('\"')) {
       RetVal.Truncate(1);
     }
 
@@ -766,7 +766,7 @@ public static partial class StringExtensions {
       width = source.Length;
     }
     #endregion === Validate parameters ===
-    string LeftPart = new string(filler, width / 2 - source.Length / 2);
+    string LeftPart = new string(filler, (width / 2) - (source.Length / 2));
     return $"{LeftPart}{source}".PadRight(width, filler).Left(width);
   }
   #endregion --- Alignment --------------------------------------------

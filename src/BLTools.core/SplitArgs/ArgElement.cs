@@ -3,7 +3,7 @@
 /// <summary>
 /// Single element of arguments : Id(position), Name, Value
 /// </summary>
-public class ArgElement : IArgElement {
+public class ArgElement : IArgElement, IEquatable<ArgElement> {
 
   #region --- Public properties ------------------------------------------------------------------------------
   /// <summary>
@@ -55,9 +55,7 @@ public class ArgElement : IArgElement {
 
   /// <inheritdoc/>
   public override bool Equals(object? obj) {
-    IArgElement? other = obj as IArgElement;
-
-    if (other is null) {
+    if (obj is not ArgElement other) {
       return false;
     }
 
@@ -84,12 +82,17 @@ public class ArgElement : IArgElement {
   /// <param name="other">The other IArgElement to compare with</param>
   /// <param name="comparison">How to compare the strings</param>
   /// <returns>true if same, false otherwise</returns>
-  public bool Equals(IArgElement? other, StringComparison comparison) {
-    #region === Validate parameters ===
-    if (other is null) {
-      return false;
-    }
-    #endregion === Validate parameters ===
-    return Name == other.Name && Value == other.Value;
+  public bool Equals(IArgElement? other, StringComparison comparison = StringComparison.CurrentCultureIgnoreCase) {
+    return other switch {
+      null => false,
+      _ => Name.Equals(other.Name, comparison) && Value.Equals(other.Value, comparison)
+    };
+  }
+
+  public bool Equals(ArgElement? other) {
+    return other switch {
+      null => false,
+      _ => Name == other.Name && Value == other.Value
+    };
   }
 }

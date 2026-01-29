@@ -203,13 +203,13 @@ public static class ObjectExtension {
         RetVal.Append(" (Flags)");
       }
 
-    } else if (SourceType.IsIEnumerable()) {
-      IEnumerable<object> EnumerableItems = (source as IEnumerable ?? throw new ApplicationException("Conversion error")).Cast<object>();
-      RetVal.Append($" ({EnumerableItems.Count()})");
-
     } else if (SourceType is IDictionary DictionaryItems) {
       RetVal.Append($" ({DictionaryItems.Count})");
 
+    } else if (SourceType.IsIEnumerable()) {
+      IEnumerable<object> EnumerableItems = (source as IEnumerable ?? throw new ApplicationException("Conversion error")).Cast<object>();
+      RetVal.Append($" ({EnumerableItems.Count()})");
+    
     }
 
     if (SourceType.IsInterface || SourceType.IsAbstract) {

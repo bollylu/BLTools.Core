@@ -3,7 +3,7 @@
 /// <summary>
 /// Extensions for external processes
 /// </summary>
-public static class TProcessExtension {
+public static class ProcessExtension {
 
   /// <summary>
   /// Wait for the end of execution of an external process, asynchronously

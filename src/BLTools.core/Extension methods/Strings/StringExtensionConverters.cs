@@ -17,7 +17,7 @@ public static partial class StringExtensions {
   /// <param name="sourceString">The source string</param>
   /// <returns>The array of bytes</returns>
   public static byte[] ToByteArray(this string sourceString) {
-    return sourceString.Select<char, byte>(c => (byte)c).ToArray();
+    return [.. sourceString.Select<char, byte>(c => (byte)c)];
   }
 
   /// <summary>
@@ -29,7 +29,7 @@ public static partial class StringExtensions {
   public static byte[] ToByteArrayFromHex(this string sourceString, bool cleanupSource = true) {
     #region Validate parameters
     if (sourceString.IsEmpty()) {
-      return Array.Empty<byte>();
+      return [];
 
     }
 

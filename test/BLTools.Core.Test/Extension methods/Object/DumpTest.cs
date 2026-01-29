@@ -2,8 +2,6 @@
 
 using BLTools.Core.Logging;
 
-using NUnit.Compatibility;
-
 namespace BLTools.Core.Test;
 
 public enum ETestEnum { A, B, C }

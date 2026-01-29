@@ -45,8 +45,8 @@ public class TTraceLogger<TSource> : ALogger<TSource> where TSource : class {
     return RetVal.ToString();
   }
 
-  protected override void _LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
-    Trace.WriteLine(_BuildLogLine(text, source, severity));
+  protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
+    Trace.WriteLine(BuildLogLine(text, source, severity));
   }
 }
 

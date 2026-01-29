@@ -1,4 +1,4 @@
-﻿
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace BLTools.Core;
@@ -6,7 +6,8 @@ namespace BLTools.Core;
 /// <summary>
 /// Extensions for string
 /// </summary>
-public static partial class StringExtension {
+  [SuppressMessage("Performance", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "", Scope = "class")]
+  public static partial class StringExtension {
 
   #region Tests
   /// <summary>

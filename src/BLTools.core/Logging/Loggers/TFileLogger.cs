@@ -6,6 +6,9 @@
 /// <typeparam name="T">The type mentioned in source</typeparam>
 public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
 
+  private const string CRLF = "\r\n";
+  private const string CR = "\r";
+
   /// <summary>
   /// The full filename receiving the log
   /// </summary>
@@ -18,7 +21,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   public TFileLogger(string filename) : base(TLoggerOptions.Default) {
     Filename = filename;
     Name = typeof(TSource).GetNameEx();
-    _Initialize();
+    Initialize();
   }
 
   /// <summary>
@@ -27,7 +30,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   public TFileLogger(string filename, ILoggerOptions options) : base(options) {
     Filename = filename;
     Name = typeof(TSource).GetNameEx();
-    _Initialize();
+    Initialize();
   }
 
   /// <summary>
@@ -37,7 +40,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   public TFileLogger(ILogger logger, string filename) : base(logger) {
     Filename = filename;
     Name = typeof(TSource).GetNameEx();
-    _Initialize();
+    Initialize();
   }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
@@ -49,10 +52,10 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   }
   #endregion --- Converters -------------------------------------------------------------------------------------
 
-  protected bool _IsInitialized = false;
+  protected bool IsInitialized = false;
 
-  protected virtual void _Initialize() {
-    if (_IsInitialized) {
+  protected virtual void Initialize() {
+    if (IsInitialized) {
       return;
     }
 
@@ -70,15 +73,15 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
       }
       Directory.CreateDirectory(DirectoryName);
     } catch (Exception ex) {
-      Trace.WriteLine($"Unable to create log directory for filename {Filename.WithQuotes()} : {ex.Message}");
+      Debug.WriteLine($"Unable to create log directory for filename {Filename.WithQuotes()} : {ex.Message}");
       throw;
     }
 
-    _IsInitialized = true;
+    IsInitialized = true;
   }
 
   #region --- ALogger abstract methods --------------------------------------------
-  protected override void _LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
+  protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
     #region === Validate parameters ===
     if (text.IsEmpty()) {
       return;
@@ -102,10 +105,10 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
       #endregion --- Ensure we can safely write --------------------------------------------
 
       IsBusy = true;
-      string ProcessedText = text.Replace("\r\n", "\r");
+      string ProcessedText = text.Replace(CRLF, CR);
       StringBuilder Builder = new StringBuilder();
-      foreach (string TextItem in text.Split('\r', StringSplitOptions.None)) {
-        Builder.AppendLine(_BuildLogLine(TextItem, source, severity));
+      foreach (string TextItem in ProcessedText.Split(CR, StringSplitOptions.None)) {
+        Builder.AppendLine(BuildLogLine(TextItem, source, severity));
       }
       try {
         File.AppendText(Builder.ToString());
@@ -128,7 +131,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
       try {
         File.Delete(Filename);
       } catch (Exception ex) {
-        Trace.WriteLine($"Unable to ResetLog for {Filename.WithQuotes()} : {ex.Message}");
+        Debug.WriteLine($"Unable to ResetLog for {Filename.WithQuotes()} : {ex.Message}");
       }
     }
   }
@@ -158,15 +161,12 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
 
     lock (_Lock) {
       try {
-        string? ActualDirectory = Path.GetDirectoryName(Filename);
-        if (ActualDirectory is null) {
-          throw new ApplicationException($"Unable to get actual directory for {Filename.WithQuotes()} : something's wrong with the parameters");
-        }
+        string ActualDirectory = Path.GetDirectoryName(Filename) ?? throw new ApplicationException($"Unable to get actual directory for {Filename.WithQuotes()} : something's wrong with the parameters");
         string Destination = Path.Combine(ActualDirectory, newName);
         File.Move(Filename, Destination);
         return Destination;
       } catch (Exception ex) {
-        Trace.WriteLine($"Unable to Rollover for {Filename.WithQuotes()} to {newName.WithQuotes()} : {ex.Message}");
+        Debug.WriteLine($"Unable to Rollover for {Filename.WithQuotes()} to {newName.WithQuotes()} : {ex.Message}");
         return null;
       }
     }

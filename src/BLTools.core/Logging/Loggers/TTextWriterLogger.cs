@@ -59,7 +59,7 @@ public class TTextWriterLogger<TSource> : ALogger<TSource> where TSource : class
   }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
-  protected override void _LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
-    _TextWriter.Write(_BuildLogLine(text, source, severity));
+  protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
+    _TextWriter.Write(BuildLogLine(text, source, severity));
   }
 }

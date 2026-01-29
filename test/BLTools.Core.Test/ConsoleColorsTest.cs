@@ -1,4 +1,5 @@
 ﻿using BLTools.Core.Logging;
+using BLTools.Core;
 
 namespace BLTools.Core.Test;
 
@@ -8,7 +9,8 @@ public class ConsoleColorsTest {
   public void DisplayTextInColors() {
     using ILogger Logger = new TTextWriterLogger<ConsoleColorsTest>(TestContext.Out);
 
-    Logger.Log($"{"Hello dear ".Style_FG_Red().Style_BG_White()} {"Luc".Style_FG_Green().Style_BG_White()}.");
+    Logger.Log($"{"Hello dear ".FG_Red().BG_White()} {"Luc".FG_Green().BG_White()}.");
+    Console.WriteLine();
   }
 
 }
