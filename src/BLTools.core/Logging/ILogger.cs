@@ -65,10 +65,12 @@ public interface ILogger : IDisposable {
     Dump(source, SObjectDumpOptions.Default, sourceName, caller);
 
   void Dump<TData>(TData source, SObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
+  void Dump<TData>(TData source, int maxDepth, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
 
   void DumpBox<TData>(TData source, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "") =>
     DumpBox(source, SObjectDumpOptions.Default, sourceName, caller);
   void DumpBox<TData>(TData source, SObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
+  void DumpBox<TData>(TData source, int maxDepth, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
   #endregion --- Special for tests -----------------------------------------
 }
 

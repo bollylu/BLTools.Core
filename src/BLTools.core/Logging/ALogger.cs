@@ -266,6 +266,10 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
     Log(data.Dump(options, sourceName), caller);
   }
 
+  public virtual void Dump<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
+    Log(data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth}, sourceName), caller);
+  }
+
   public virtual void DumpBox<TData>(TData data, SObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
     TTextBox TextBox = new TTextBox() {
       Title = data.GetDisplayName(sourceName),
@@ -275,6 +279,15 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
     Log(TextBox.Render(), caller);
   }
 
-    
-    #endregion --- Special for tests -----------------------------------------
+  public virtual void DumpBox<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
+    TTextBox TextBox = new TTextBox() {
+      Title = data.GetDisplayName(sourceName),
+      Content = data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth}, sourceName)
+    };
+
+    Log(TextBox.Render(), caller);
+  }
+
+
+  #endregion --- Special for tests -----------------------------------------
 }
