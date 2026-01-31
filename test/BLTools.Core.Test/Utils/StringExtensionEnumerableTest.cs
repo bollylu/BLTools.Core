@@ -1,6 +1,5 @@
-﻿namespace BLTools.Test.Extensions.StringEx.IEnumerableEx;
+﻿namespace BLTools.Core.Test.Extensions.StringEx.IEnumerableEx;
 
-[TestClass]
 public class StringExtensionEnumerableTest {
 
   private const string COMPUTER = "Computer";
@@ -11,45 +10,44 @@ public class StringExtensionEnumerableTest {
   private const string TELEVISION_FR = "Télévision";
   private const string CHAINE_HIFI = "Chaîne hifi";
 
-  private readonly string[] ListOfStrings = new string[] { COMPUTER, PERSONAL_COMPUTER, MAINFRAME, POCKET_PC, TELEVISION_FR };
+  private readonly string[] ListOfStrings = [COMPUTER, PERSONAL_COMPUTER, MAINFRAME, POCKET_PC, TELEVISION_FR];
 
-  [TestMethod]
+  [Test]
   public void SearchIsIn_StringInTheList_ResultTrue() {
-    Assert.IsTrue(COMPUTER.IsIn(ListOfStrings));
+    Assert.That(COMPUTER.IsIn(ListOfStrings), Is.True);
   }
 
-  [TestMethod]
+  [Test]
   public void SearchIsIn_StringNotInTheList_ResultFalse() {
-    Assert.IsFalse(CHAINE_HIFI.IsIn(ListOfStrings));
+    Assert.That(CHAINE_HIFI.IsIn(ListOfStrings), Is.False);
   }
 
-  [TestMethod]
+  [Test]
   public void SearchIsIn_StringInTheListIgnoreCase_ResultTrue() {
-    Assert.IsTrue(MAINFRAME.ToLower().IsIn(ListOfStrings));
+    Assert.That(MAINFRAME.ToLower().IsIn(ListOfStrings), Is.True);
   }
 
-  [TestMethod]
+  [Test]
   public void SearchIsIn_StringInTheListCase_ResultFalse() {
-    Assert.IsFalse(MAINFRAME.ToLower().IsIn(ListOfStrings, StringComparison.InvariantCulture));
+    Assert.That(MAINFRAME.ToLower().IsIn(ListOfStrings, StringComparison.InvariantCulture), Is.False);
   }
 
-  [TestMethod]
+  [Test]
   public void SearchIsIn_StringInTheListCaseFrench_ResultTrue() {
     CultureInfo OldCulture = CultureInfo.CurrentCulture;
     CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("FR-fr");
-    Assert.IsFalse(TELEVISION_UK.IsIn(ListOfStrings, StringComparison.CurrentCulture));
-    Assert.IsTrue(TELEVISION_FR.IsIn(ListOfStrings, StringComparison.CurrentCulture));
+    Assert.That(TELEVISION_UK.IsIn(ListOfStrings, StringComparison.CurrentCulture), Is.False);
+    Assert.That(TELEVISION_FR.IsIn(ListOfStrings, StringComparison.CurrentCulture), Is.True );
     CultureInfo.CurrentCulture = OldCulture;
   }
 
-
-  [TestMethod]
+  [Test]
   public void SearchIsNotIn_StringInNotTheList_ResultTrue() {
-    Assert.IsTrue(CHAINE_HIFI.IsNotIn(ListOfStrings));
+    Assert.That(CHAINE_HIFI.IsNotIn(ListOfStrings), Is.True);
   }
 
-  [TestMethod]
+  [Test]
   public void SearchIsNotIn_StringNotInTheList_ResultFalse() {
-    Assert.IsFalse(COMPUTER.IsNotIn(ListOfStrings));
+    Assert.That(COMPUTER.IsNotIn(ListOfStrings),Is.False);
   }
 }

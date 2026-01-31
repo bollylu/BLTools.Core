@@ -1,4 +1,4 @@
-﻿namespace BLTools.Test.Extensions.StringBuilderEx;
+﻿namespace BLTools.Core.Test.Extensions.StringBuilderEx;
 
 /// <summary>
 ///This is a test class for StringBuilderExtension and is intended

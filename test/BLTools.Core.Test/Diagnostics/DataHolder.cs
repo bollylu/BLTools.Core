@@ -39,7 +39,7 @@ public class TComplexDataHolder : IData {
   public IInnerData InnerData { get; set; } = new TDataHolder();
   public IInnerData InnerData2 { get; set; } = new TDataHolder2();
   public IInnerData InnerData3 { get; set; } = new TDataHolder2() { Name = "Other", Description = "blabla ...", Age = 33 };
-  public List<IMoreData> MoreData { get; } = new();
+  public List<IMoreData> MoreData { get; } = [];
 
   public TComplexDataHolder() {
     MoreData.Add(new TMoreData());
@@ -49,7 +49,7 @@ public class TComplexDataHolder : IData {
 public class TComplexDataHolder2 : IData {
   public IInnerData InnerData { get; set; } = new TDataHolder();
   public IInnerData InnerData2 { get; set; } = new TDataHolder() { Name = "Other", Description = "blabla ...", Age = 33 };
-  public List<IMoreData> MoreData { get; } = new();
+  public List<IMoreData> MoreData { get; } = [];
 
   private readonly double PiValue = 3.1416d;
 
@@ -95,8 +95,8 @@ public class TCustomers : List<SPerson> {
 }
 
 public class TContactFile {
-  public TCustomers Customers { get; } = new TCustomers() {
+  public TCustomers Customers { get; } = [
     new SPerson() {Id=1, Name="Luc"},
     new SPerson() {Id=2, Name="Brilly"}
-  };
+  ];
 }

@@ -11,7 +11,7 @@ namespace BLTools.Core.Test.Cli;
 ///</summary>
 public class SplitArgsTest {
 
-  private ILogger Logger => new TConsoleLogger<IPAddressExtensionTest>(TLoggerOptions.MessageOnly);
+  private static ILogger Logger => new TConsoleLogger<IPAddressExtensionTest>(TLoggerOptions.MessageOnly);
 
   #region Tests for constructors
   /// <summary>
@@ -64,7 +64,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void SplitArgsConstructor_FromArray_Gets3Args() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "par1=val1", "par2=val2" };
+    IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Assert.That(Args.Count(), Is.EqualTo(3));
@@ -75,7 +75,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void SplitArgsConstructor_FromArray_FirstArgIsProgram() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "par1=val1", "par2=val2" };
+    IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Assert.That(Args[0]?.Name ?? "", Is.EqualTo("program.exe"));
@@ -86,10 +86,10 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void SplitArgsConstructor_FromArray_ContainsArgElement() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "par1=val1", "par2=val2" };
+    IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
-        Assert.That(Args.GetAll(), Does.Contain(new ArgElement(1, "par1", "val1")));
+    Assert.That(Args.GetAll(), Does.Contain(new ArgElement(1, "par1", "val1")));
   }
 
 #if NETCOREAPP
@@ -102,7 +102,7 @@ public class SplitArgsTest {
     NameValueCollection TestCollection = HttpUtility.ParseQueryString(Url);
     SplitArgs Args = new SplitArgs();
     Args.Parse(TestCollection);
-        Assert.That(Args.GetAll(), Does.Contain(new ArgElement(0, "arg1", "value1")));
+    Assert.That(Args.GetAll(), Does.Contain(new ArgElement(0, "arg1", "value1")));
   }
 
   /// <summary>
@@ -126,7 +126,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void IsDefined_ValidParam_IsTrue() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "/par1=val1", "/verbose" };
+    IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Assert.That(Args.IsDefined("verbose"), Is.True);
@@ -137,7 +137,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void IsDefined_BadParam_IsFalse() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "/par1=val1", "/verbose" };
+    IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Assert.That(Args.IsDefined("otherthanverbose"), Is.False);
@@ -150,7 +150,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void GetValue_KeyGenericString_IsTrue() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "/par1=val1", "/verbose" };
+    IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>("par1", ""), Is.EqualTo("val1"));
@@ -160,7 +160,7 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void GetValue_KeyGenericStringArray_IsTrue() {
-    IEnumerable<string> Source = new List<string>() { "program.exe", "/par1=val1;val2;val3", "/verbose" };
+    IEnumerable<string> Source = ["program.exe", "/par1=val1;val2;val3", "/verbose"];
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     string[] DataRead = Args.GetValue<string[]>("par1", []);
@@ -191,9 +191,12 @@ public class SplitArgsTest {
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     long[] DataRead = Args.GetValue<long[]>("par1", []);
-    Assert.That(DataRead[0], Is.EqualTo(456879));
-    Assert.That(DataRead[1], Is.EqualTo(9874563));
-    Assert.That(DataRead[2], Is.EqualTo(123654789));
+    Assert.Multiple(() =>
+    {
+      Assert.That(DataRead[0], Is.EqualTo(456879));
+      Assert.That(DataRead[1], Is.EqualTo(9874563));
+      Assert.That(DataRead[2], Is.EqualTo(123654789));
+    });
   }
 
   /// <summary>

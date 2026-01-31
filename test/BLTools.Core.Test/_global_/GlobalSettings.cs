@@ -1,6 +1,7 @@
-﻿using BLTools.Diagnostic;
+﻿
+using BLTools.Core.Diagnostic;
 
-namespace BLToolsTest;
+namespace BLTools.Core.Test;
 
 /// <summary>
 /// Global settings for the namespace BLTools
@@ -46,7 +47,7 @@ public static class GlobalSettings {
   /// </summary>
   public static TAbout ExecutingAbout {
     get {
-      return _ExecutingAbout ??= new TAbout(AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name == nameof(BLToolsTest)));
+      return _ExecutingAbout ??= new TAbout(AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name == nameof(BLTools.Core.Test)));
     }
   }
   private static TAbout? _ExecutingAbout;

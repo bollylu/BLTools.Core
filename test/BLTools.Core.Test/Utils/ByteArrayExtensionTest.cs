@@ -1,6 +1,6 @@
 ﻿using BLTools.Test.Diagnostics;
 
-namespace BLTools.Test.Extensions.ByteArrayEx;
+namespace BLTools.Core.Test.Extensions.ByteArrayEx;
 
 /// <summary>
 ///This is a test class for ByteArrayExtensionTest and is intended
@@ -8,14 +8,14 @@ namespace BLTools.Test.Extensions.ByteArrayEx;
 ///</summary>
 public class ByteArrayExtensionTest {
 
-  private ILogger Logger => new TConsoleLogger<ByteArrayExtensionTest>(TLoggerOptions.MessageOnly);
+  private static ILogger Logger => new TConsoleLogger<ByteArrayExtensionTest>(TLoggerOptions.MessageOnly);
 
   /// <summary>
   ///A test for ToHexString
   ///</summary>
   [Test]
   public void ToHexString_CommaSeparator_ResultOK() {
-    byte[] rawData = new byte[] { 0x0C, 0x17, 0x22, 0x2D, 0x38 };
+    byte[] rawData = [0x0C, 0x17, 0x22, 0x2D, 0x38];
     string separator = ",";
     string expected = "0C,17,22,2D,38";
     string actual;
@@ -28,7 +28,7 @@ public class ByteArrayExtensionTest {
   ///</summary>
   [Test]
   public void ToHexString_NoSeparator_ResultOK() {
-    byte[] rawData = new byte[] { 0x0C, 0x17, 0x22, 0x2D, 0x38 };
+    byte[] rawData = [0x0C, 0x17, 0x22, 0x2D, 0x38];
     string expected = "0C 17 22 2D 38";
     string actual;
     actual = rawData.ToHexString();
@@ -99,7 +99,7 @@ public class ByteArrayExtensionTest {
     Logger.Dump(Source);
     byte[] Target = Source.ToByteArrayFromHex();
     Logger.Dump(Target);
-    Assert.That(Target.Length, Is.EqualTo(0));
+    Assert.That(Target, Is.Empty);
     Logger.Ok();
   }
 

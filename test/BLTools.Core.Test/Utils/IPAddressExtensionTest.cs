@@ -8,7 +8,7 @@ namespace BLTools.Core.Test.Extensions.IPAddressEx;
 ///</summary>
 public class IPAddressExtensionTest {
 
-  private ILogger Logger => new TConsoleLogger<IPAddressExtensionTest>(TLoggerOptions.MessageOnly);
+  private static ILogger Logger => new TConsoleLogger<IPAddressExtensionTest>(TLoggerOptions.MessageOnly);
 
   /// <summary>
   ///A test for GetSubnet
