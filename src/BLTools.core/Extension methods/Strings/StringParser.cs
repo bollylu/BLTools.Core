@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace BLTools.Core;
 
@@ -194,6 +195,21 @@ public static class StringParser {
   }
 
   /// <summary>
+  /// Converts a string to a binary integer type T.
+  /// </summary>
+  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
+  /// <param name="source">The string to convert.</param>
+  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
+  /// <returns>The converted binary integer value or the default value in case of error.</returns>
+  public static T ToBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue) where T : IBinaryInteger<T> {
+    try {
+      return (T)Convert.ChangeType(source.ToString(), typeof(T));
+    } catch {
+      return defaultValue;
+    }
+  }
+
+  /// <summary>
   /// Converts a string to a floating point number using InvariantCulture
   /// </summary>
   /// <typeparam name="T">The type of the floating point number to convert to.</typeparam>
@@ -235,8 +251,29 @@ public static class StringParser {
   /// <param name="source">The string to convert, where each value is separated by the default separator.</param>
   /// <param name="defaultValue">The default value to return in case of conversion error.</param>
   /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
-  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
-    source.Split(DEFAULT_SEPARATOR).Select(x => x.ToBinaryInteger(defaultValue));
+  public static IList<T> ToListBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
+    ToListBinaryInteger(source.AsSpan(), DEFAULT_SEPARATOR, defaultValue);
+
+  /// <summary>
+  /// Converts a string to an enumerable collection of binary integer type T.
+  /// </summary>
+  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
+  /// <param name="source">The string to convert, where each value is separated by the default separator.</param>
+  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
+  /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
+  public static IList<T> ToListBinaryInteger<T>(this ReadOnlySpan<char> source, char separator, T defaultValue) where T : IBinaryInteger<T> {
+    List<T> RetVal = [];
+    foreach (var rangeItem in source.Split(separator)) {
+      ReadOnlySpan<char> item = source[rangeItem].Trim();
+
+      if (item.Length > 0 && T.TryParse(item, CultureInfo.InvariantCulture, out T? result)) {
+        RetVal.Add(result);
+      } else {
+        RetVal.Add(defaultValue);
+      }
+    }
+    return RetVal;
+  }
 
   /// <summary>
   /// Converts a string to an enumerable collection of binary integer type T.
@@ -247,7 +284,7 @@ public static class StringParser {
   /// <param name="separator">The character that separates the values in the source string.</param>
   /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
   public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue, char separator) where T : IBinaryInteger<T> =>
-    source.Split(separator).Select(x => x.ToBinaryInteger(defaultValue));
+    source.Split(separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => x.ToBinaryInteger(defaultValue));
 
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T using InvariantCulture.

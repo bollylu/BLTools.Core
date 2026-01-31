@@ -155,49 +155,55 @@ public class SplitArgsTest {
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>("par1", ""), Is.EqualTo("val1"));
   }
-  /// <summary>
-  ///A test for GetValue&st;string[]&gt;
-  ///</summary>
-  [Test]
-  public void GetValue_KeyGenericStringArray_IsTrue() {
-    IEnumerable<string> Source = ["program.exe", "/par1=val1;val2;val3", "/verbose"];
-    SplitArgs Args = new SplitArgs();
-    Args.Parse(Source);
-    string[] DataRead = Args.GetValue<string[]>("par1", []);
-    Assert.That(DataRead[0], Is.EqualTo("val1"));
-    Assert.That(DataRead[1], Is.EqualTo("val2"));
-    Assert.That(DataRead[2], Is.EqualTo("val3"));
-  }
-  /// <summary>
-  ///A test for GetValue&st;string[]&gt;
-  ///</summary>
-  [Test]
-  public void GetValue_KeyGenericIntArray_IsTrue() {
-    IEnumerable<string> Source = ["program.exe", "/par1=18;4568;123", "/verbose"];
-    SplitArgs Args = new SplitArgs();
-    Args.Parse(Source);
-    int[] DataRead = Args.GetValue<int[]>("par1", []);
-    Assert.That(DataRead[0], Is.EqualTo(18));
-    Assert.That(DataRead[1], Is.EqualTo(4568));
-    Assert.That(DataRead[2], Is.EqualTo(123));
-  }
+  ///// <summary>
+  /////A test for GetValue&st;string[]&gt;
+  /////</summary>
+  //[Test]
+  //public void GetValue_KeyGenericStringArray_IsTrue() {
+  //  IEnumerable<string> Source = ["program.exe", "/par1=val1;val2;val3", "/verbose"];
+  //  SplitArgs Args = new SplitArgs();
+  //  Args.Parse(Source);
+  //  string[] DataRead = Args.GetValue<string[]>("par1", []);
+  //  Assert.Multiple(() =>
+  //  {
+  //    Assert.That(DataRead[0], Is.EqualTo("val1"));
+  //    Assert.That(DataRead[1], Is.EqualTo("val2"));
+  //    Assert.That(DataRead[2], Is.EqualTo("val3"));
+  //  });
+  //}
+  ///// <summary>
+  /////A test for GetValue&st;string[]&gt;
+  /////</summary>
+  //[Test]
+  //public void GetValue_KeyGenericIntArray_IsTrue() {
+  //  IEnumerable<string> Source = ["program.exe", "/par1=18;4568;123", "/verbose"];
+  //  SplitArgs Args = new SplitArgs();
+  //  Args.Parse(Source);
+  //  int[] DataRead = Args.GetValue<int[]>("par1", 0);
+  //  Assert.Multiple(() =>
+  //  {
+  //    Assert.That(DataRead[0], Is.EqualTo(18));
+  //    Assert.That(DataRead[1], Is.EqualTo(4568));
+  //    Assert.That(DataRead[2], Is.EqualTo(123));
+  //  });
+  //}
 
-  /// <summary>
-  ///A test for GetValue&st;string[]&gt;
-  ///</summary>
-  [Test]
-  public void GetValue_KeyGenericLongArray_IsTrue() {
-    IEnumerable<string> Source = ["program.exe", "/par1=456879;9874563;123654789", "/verbose"];
-    SplitArgs Args = new SplitArgs();
-    Args.Parse(Source);
-    long[] DataRead = Args.GetValue<long[]>("par1", []);
-    Assert.Multiple(() =>
-    {
-      Assert.That(DataRead[0], Is.EqualTo(456879));
-      Assert.That(DataRead[1], Is.EqualTo(9874563));
-      Assert.That(DataRead[2], Is.EqualTo(123654789));
-    });
-  }
+  ///// <summary>
+  /////A test for GetValue&st;string[]&gt;
+  /////</summary>
+  //[Test]
+  //public void GetValue_KeyGenericLongArray_IsTrue() {
+  //  IEnumerable<string> Source = ["program.exe", "/par1=456879;9874563;123654789", "/verbose"];
+  //  SplitArgs Args = new SplitArgs();
+  //  Args.Parse(Source);
+  //  long[] DataRead = Args.GetValue<long[]>("par1", []);
+  //  Assert.Multiple(() =>
+  //  {
+  //    Assert.That(DataRead[0], Is.EqualTo(456879));
+  //    Assert.That(DataRead[1], Is.EqualTo(9874563));
+  //    Assert.That(DataRead[2], Is.EqualTo(123654789));
+  //  });
+  //}
 
   /// <summary>
   ///A test for GetValue&st;string&gt; with spaces

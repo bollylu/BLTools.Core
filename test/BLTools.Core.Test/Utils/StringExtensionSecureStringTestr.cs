@@ -20,7 +20,7 @@ public class SecureStringExtensionTest {
   public void ConvertToSecureString_Compare_ResultTrue() {
     string SourceValue = "1235 4";
     SecureString actual = SourceValue.ConvertToSecureString();
-    Assert.That(actual, Is.EqualTo(SourceValue.ConvertToSecureString()));
+    Assert.That(actual.IsEqualTo(SourceValue.ConvertToSecureString()), Is.True);
   }
 
   [Test]

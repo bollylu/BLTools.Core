@@ -31,10 +31,10 @@ public class DictionaryExtensionTest {
   private const int DEFAULT_INT = -1;
   private const bool DEFAULT_BOOL = false;
 
-  private ILogger Logger => new TConsoleLogger<DiagnosticsTest_Dump>(TLoggerOptions.MessageOnly);
+  private static ILogger Logger => new TConsoleLogger<DiagnosticsTest_Dump>(TLoggerOptions.MessageOnly);
 
   [OneTimeSetUp]
-  public static void MyClassInitialize(TestContext testContext) {
+  public void MyClassInitialize() {
     SourceDictStringString.Add(KEY_STRING1, VALUE_STRING1);
     SourceDictStringString.Add(KEY_STRING2, VALUE_STRING2);
 
