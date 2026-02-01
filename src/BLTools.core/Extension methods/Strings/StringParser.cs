@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace BLTools.Core;
 
@@ -9,7 +10,9 @@ public static class StringParser {
   /// The default character used to separate values when converting to an enumerable collection.
   /// </summary>
   public static char DEFAULT_SEPARATOR { get; set; } = ';';
+  public static CultureInfo DEFAULT_CULTURE { get; set; } = CultureInfo.InvariantCulture;
 
+  #region --- Version --------------------------------------------
   /// <summary>
   /// Converts a string to a Version.
   /// </summary>
@@ -31,7 +34,9 @@ public static class StringParser {
       return defaultValue;
     }
   }
+  #endregion --- Version -----------------------------------------
 
+  #region --- Guid --------------------------------------------
   /// <summary>
   /// Converts a string to a Guid.
   /// </summary>
@@ -53,7 +58,9 @@ public static class StringParser {
       return defaultValue;
     }
   }
+  #endregion --- Guid -----------------------------------------
 
+  #region --- DateTime --------------------------------------------
   /// <summary>
   /// Converts a string to a DateTime using the current culture info.
   /// </summary>
@@ -93,7 +100,9 @@ public static class StringParser {
       return defaultValue;
     }
   }
+  #endregion --- DateTime -----------------------------------------
 
+  #region --- Enum --------------------------------------------
   /// <summary>
   /// Converts a string to an enum of type T.
   /// </summary>
@@ -118,7 +127,9 @@ public static class StringParser {
       return defaultValue;
     }
   }
+  #endregion --- Enum -----------------------------------------
 
+  #region --- Boolean --------------------------------------------
   /// <summary>
   /// Converts a string to a bool
   /// </summary>
@@ -178,6 +189,18 @@ public static class StringParser {
     return false;
 
   }
+  #endregion --- Boolean -----------------------------------------
+
+  #region --- BinaryInteger --------------------------------------------
+  /// <summary>
+  /// Converts a string to a binary integer type T.
+  /// </summary>
+  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
+  /// <param name="source">The string to convert.</param>
+  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
+  /// <returns>The converted binary integer value or the default value in case of error.</returns>
+  public static T ToBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
+    ToBinaryInteger(source.AsSpan(), defaultValue, DEFAULT_CULTURE);
 
   /// <summary>
   /// Converts a string to a binary integer type T.
@@ -186,29 +209,26 @@ public static class StringParser {
   /// <param name="source">The string to convert.</param>
   /// <param name="defaultValue">The default value to return in case of conversion error.</param>
   /// <returns>The converted binary integer value or the default value in case of error.</returns>
-  public static T ToBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> {
+  public static T ToBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue) where T : IBinaryInteger<T> =>
+    ToBinaryInteger(source, defaultValue, DEFAULT_CULTURE);
+
+  public static T ToBinaryInteger<T>(this string source, T defaultValue, CultureInfo culture) where T : IBinaryInteger<T> =>
+    ToBinaryInteger(source.AsSpan(), defaultValue, culture);
+
+  public static T ToBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue, CultureInfo culture) where T : IBinaryInteger<T> {
     try {
-      return (T)Convert.ChangeType(source, typeof(T));
+      if (T.TryParse(source, NumberStyles.Integer | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands, culture, out T? result)) {
+        return result;
+      } else {
+        return defaultValue;
+      }
     } catch {
       return defaultValue;
     }
   }
+  #endregion --- BinaryInteger -----------------------------------------
 
-  /// <summary>
-  /// Converts a string to a binary integer type T.
-  /// </summary>
-  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
-  /// <param name="source">The string to convert.</param>
-  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
-  /// <returns>The converted binary integer value or the default value in case of error.</returns>
-  public static T ToBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue) where T : IBinaryInteger<T> {
-    try {
-      return (T)Convert.ChangeType(source.ToString(), typeof(T));
-    } catch {
-      return defaultValue;
-    }
-  }
-
+  #region --- FloatingPoint --------------------------------------------
   /// <summary>
   /// Converts a string to a floating point number using InvariantCulture
   /// </summary>
@@ -216,7 +236,8 @@ public static class StringParser {
   /// <param name="source">The string to convert.</param>
   /// <param name="defaultValue">The default value to return if the conversion fails.</param>
   /// <returns>The converted floating point number, or the default value if the conversion fails.</returns>
-  public static T ToFloatingPoint<T>(this string source, T defaultValue) where T : IFloatingPoint<T> => ToFloatingPoint(source, defaultValue, CultureInfo.InvariantCulture);
+  public static T ToFloatingPoint<T>(this string source, T defaultValue) where T : IFloatingPoint<T> =>
+    ToFloatingPoint(source, defaultValue, DEFAULT_CULTURE);
 
   /// <summary>
   /// Converts a string to a floating point type T, using the specified culture.
@@ -226,65 +247,73 @@ public static class StringParser {
   /// <param name="defaultValue">The default value to return in case of conversion error.</param>
   /// <param name="culture">The culture to use for the conversion.</param>
   /// <returns>The converted floating point value or the default value in case of error.</returns>
-  public static T ToFloatingPoint<T>(this string source, T defaultValue, CultureInfo culture) where T : IFloatingPoint<T> {
+  public static T ToFloatingPoint<T>(this string source, T defaultValue, CultureInfo culture) where T : IFloatingPoint<T> =>
+    ToFloatingPoint(source.AsSpan(), defaultValue, culture);
+
+
+  public static T ToFloatingPoint<T>(this ReadOnlySpan<char> source, T defaultValue) where T : IFloatingPoint<T> =>
+    ToFloatingPoint(source, defaultValue, DEFAULT_CULTURE);
+
+  public static T ToFloatingPoint<T>(this ReadOnlySpan<char> source, T defaultValue, CultureInfo culture) where T : IFloatingPoint<T> {
     char DecimalSeparator = culture.NumberFormat.NumberDecimalSeparator[0];
-    if (source.Any(x => !x.IsNumeric() && x != DecimalSeparator)) {
-      return defaultValue;
+    int decimalCount = 0;
+
+    foreach (var c in source) {
+      if (!c.IsNumericOrSeparator()) {
+        return defaultValue;
+      }
+
+      if (c == DecimalSeparator) {
+        decimalCount++;
+        if (decimalCount > 1) {
+          return defaultValue;
+        }
+      }
     }
-    if (source.Count(x => !x.IsNumeric()) > 1) {
-      return defaultValue;
-    }
-    if (source.Count(x => x == DecimalSeparator) > 1) {
-      return defaultValue;
-    }
+
     try {
-      return (T)Convert.ChangeType(source, typeof(T), culture);
+      return T.Parse(source, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, culture);
     } catch {
       return defaultValue;
     }
   }
+  #endregion --- FloatingPoint -----------------------------------------
 
-  /// <summary>
-  /// Converts a string to an enumerable collection of binary integer type T.
-  /// </summary>
-  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
-  /// <param name="source">The string to convert, where each value is separated by the default separator.</param>
-  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
-  /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
-  public static IList<T> ToListBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
-    ToListBinaryInteger(source.AsSpan(), DEFAULT_SEPARATOR, defaultValue);
+  #region --- List of BinaryInteger --------------------------------------------
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source.AsSpan(), defaultValue, DEFAULT_SEPARATOR, DEFAULT_CULTURE);
 
-  /// <summary>
-  /// Converts a string to an enumerable collection of binary integer type T.
-  /// </summary>
-  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
-  /// <param name="source">The string to convert, where each value is separated by the default separator.</param>
-  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
-  /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
-  public static IList<T> ToListBinaryInteger<T>(this ReadOnlySpan<char> source, char separator, T defaultValue) where T : IBinaryInteger<T> {
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue, char separator) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source.AsSpan(), defaultValue, separator, DEFAULT_CULTURE);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue, char separator, CultureInfo culture) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source.AsSpan(), defaultValue, separator, culture);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue, CultureInfo culture) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source.AsSpan(), defaultValue, DEFAULT_SEPARATOR, culture);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source, defaultValue, DEFAULT_SEPARATOR, DEFAULT_CULTURE);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue, char separator) where T : IBinaryInteger<T> =>
+   ToEnumerableBinaryInteger(source, defaultValue, separator, DEFAULT_CULTURE);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue, CultureInfo culture) where T : IBinaryInteger<T> =>
+    ToEnumerableBinaryInteger(source, defaultValue, DEFAULT_SEPARATOR, culture);
+
+  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this ReadOnlySpan<char> source, T defaultValue, char separator, CultureInfo culture) where T : IBinaryInteger<T> {
     List<T> RetVal = [];
-    foreach (var rangeItem in source.Split(separator)) {
-      ReadOnlySpan<char> item = source[rangeItem].Trim();
-
-      if (item.Length > 0 && T.TryParse(item, CultureInfo.InvariantCulture, out T? result)) {
-        RetVal.Add(result);
-      } else {
-        RetVal.Add(defaultValue);
+    foreach (var RangeItem in source.Split(separator)) {
+      if (RangeItem.End.Value - RangeItem.Start.Value <= 0) {
+        continue;
       }
+      RetVal.Add(source[RangeItem].ToBinaryInteger<T>(defaultValue, culture));
     }
     return RetVal;
   }
+  #endregion --- List of BinaryInteger -----------------------------------------
 
-  /// <summary>
-  /// Converts a string to an enumerable collection of binary integer type T.
-  /// </summary>
-  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
-  /// <param name="source">The string to convert, where each value is separated by the specified separator.</param>
-  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
-  /// <param name="separator">The character that separates the values in the source string.</param>
-  /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
-  public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue, char separator) where T : IBinaryInteger<T> =>
-    source.Split(separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(x => x.ToBinaryInteger(defaultValue));
+
 
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T using InvariantCulture.
@@ -295,7 +324,7 @@ public static class StringParser {
   /// <returns>An enumerable collection of floating point with either converted value or the default value in case of error.</returns>
   /// <remarks>Collection elements in the source string must be separated by a different character than comma separator from the culture.</remarks>
   public static IEnumerable<T> ToEnumerableFloatingPoint<T>(this string source, T defaultValue) where T : IFloatingPoint<T> =>
-    source.Split(DEFAULT_SEPARATOR).Select(x => x.ToFloatingPoint(defaultValue));
+    ToEnumerableFloatingPoint(source, defaultValue, DEFAULT_CULTURE, DEFAULT_SEPARATOR);
 
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T using InvariantCulture.
@@ -307,7 +336,7 @@ public static class StringParser {
   /// <returns>An enumerable collection of floating point with either converted value or the default value in case of error.</returns>
   /// <remarks>Collection elements in the source string must be separated by a different character than comma separator from the culture.</remarks>
   public static IEnumerable<T> ToEnumerableFloatingPoint<T>(this string source, T defaultValue, char separator) where T : IFloatingPoint<T> =>
-    source.Split(separator).Select(x => x.ToFloatingPoint(defaultValue));
+    ToEnumerableFloatingPoint(source, defaultValue, DEFAULT_CULTURE, separator);
 
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T, using the specified culture.
@@ -319,7 +348,7 @@ public static class StringParser {
   /// <returns>An enumerable collection of floating point with either converted value or the default value in case of error.</returns>
   /// /// <remarks>Collection elements in the source string must be separated by a different character than comma separator from the culture.</remarks>
   public static IEnumerable<T> ToEnumerableFloatingPoint<T>(this string source, T defaultValue, CultureInfo culture) where T : IFloatingPoint<T> =>
-    source.Split(DEFAULT_SEPARATOR).Select(x => x.ToFloatingPoint(defaultValue, culture));
+    ToEnumerableFloatingPoint(source, defaultValue, culture, DEFAULT_SEPARATOR);
 
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T, using the specified culture.
@@ -332,7 +361,26 @@ public static class StringParser {
   /// <returns>An enumerable collection of floating point with either converted value or the default value in case of error.</returns>
   /// /// <remarks>Collection elements in the source string must be separated by a different character than comma separator from the culture.</remarks>
   public static IEnumerable<T> ToEnumerableFloatingPoint<T>(this string source, T defaultValue, CultureInfo culture, char separator) where T : IFloatingPoint<T> =>
-    source.Split(separator).Select(x => x.ToFloatingPoint(defaultValue, culture));
+    ToEnumerableFloatingPoint(source.AsSpan(), defaultValue, separator, culture);
+
+  /// <summary>
+  /// Converts a string to an enumerable collection of binary integer type T.
+  /// </summary>
+  /// <typeparam name="T">The destination binary integer type to convert to.</typeparam>
+  /// <param name="source">The string to convert, where each value is separated by the default separator.</param>
+  /// <param name="defaultValue">The default value to return in case of conversion error.</param>
+  /// <returns>An enumerable collection of binary integer with either converted value or the default value in case of error.</returns>
+  public static IEnumerable<T> ToEnumerableFloatingPoint<T>(this ReadOnlySpan<char> source, T defaultValue, char separator, CultureInfo culture) where T : IFloatingPoint<T> {
+    List<T> RetVal = [];
+    foreach (var RangeItem in source.Split(separator)) {
+      if (RangeItem.End.Value - RangeItem.Start.Value <= 0) {
+        continue;
+      }
+      RetVal.Add(source[RangeItem].ToFloatingPoint<T>(defaultValue, culture));
+    }
+    return RetVal;
+  }
+
 
   /// <summary>
   /// Converts a string to a T, using InvariantCulture

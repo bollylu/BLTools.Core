@@ -482,10 +482,10 @@ public class SplitArgsTest {
     SplitArgs Args = new SplitArgs();
     Args.Parse(Source);
     Logger.Dump(Args);
-    Logger.Message("Get par1 as int, obtain default value");
+    Logger.Message("Get par1 as int");
     int Target = Args.GetValue<int>("par1", 0, CultureInfo.GetCultureInfo("en-us"));
     Logger.Dump(Target);
-    Assert.That(Target, Is.Not.EqualTo(1236123));
+    Assert.That(Target, Is.EqualTo(1236123));
     Logger.Ok();
   }
 
