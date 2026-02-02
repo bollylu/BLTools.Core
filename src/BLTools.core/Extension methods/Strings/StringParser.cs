@@ -279,7 +279,7 @@ public static class StringParser {
   }
   #endregion --- FloatingPoint -----------------------------------------
 
-  #region --- List of BinaryInteger --------------------------------------------
+  #region --- Enumerable of BinaryInteger --------------------------------------------
   public static IEnumerable<T> ToEnumerableBinaryInteger<T>(this string source, T defaultValue) where T : IBinaryInteger<T> =>
     ToEnumerableBinaryInteger(source.AsSpan(), defaultValue, DEFAULT_SEPARATOR, DEFAULT_CULTURE);
 
@@ -311,10 +311,9 @@ public static class StringParser {
     }
     return RetVal;
   }
-  #endregion --- List of BinaryInteger -----------------------------------------
+  #endregion --- Enumerable of BinaryInteger -----------------------------------------
 
-
-
+  #region --- Enumerable of Floating point --------------------------------------------
   /// <summary>
   /// Converts a string to an enumerable collection of floating point type T using InvariantCulture.
   /// </summary>
@@ -379,7 +378,8 @@ public static class StringParser {
       RetVal.Add(source[RangeItem].ToFloatingPoint<T>(defaultValue, culture));
     }
     return RetVal;
-  }
+  } 
+  #endregion --- Enumerable of Floating point -----------------------------------------
 
 
   /// <summary>

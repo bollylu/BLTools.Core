@@ -13,3 +13,6 @@
 ### 2.0.0
 - Migration of the test projects to .NET 9.x and .NET 10.x
 - Updated all test projects to use the latest versions of dependencies
+
+### 2.1.0
+- Some reorganisation of the tests

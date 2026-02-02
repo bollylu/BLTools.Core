@@ -1,7 +1,8 @@
 ﻿using BLTools.Core.Text;
+
 using static BLTools.Core.Text.TextBox;
 
-namespace BLTools.Core.Test.Extensions.TextBoxEx;
+namespace BLTools.Core.Test.Text;
 
 public class TextTest {
 

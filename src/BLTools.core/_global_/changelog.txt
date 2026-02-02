@@ -16,3 +16,8 @@
 - Fixed minor bugs and improved stability
 - Added ConsoleX static class for enhanced console operations
 - Added AnsiColorExtensions for extended ANSI color support
+
+### 7.1.0
+- Compiles only on .NET 9.x and 10.x
+- Fixed issues with ToEnumerableBinaryInteger extension method
+- Fixed issues with ToEnumerableFloatingPoint extension method
