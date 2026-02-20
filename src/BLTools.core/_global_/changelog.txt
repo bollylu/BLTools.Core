@@ -21,3 +21,6 @@
 - Compiles only on .NET 9.x and 10.x
 - Fixed issues with ToEnumerableBinaryInteger extension method
 - Fixed issues with ToEnumerableFloatingPoint extension method
+
+### 7.1.1
+- Added CreateLoggerFor to ILogger to easily duplicate loggers with the same configuration but different class name

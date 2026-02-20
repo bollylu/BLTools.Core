@@ -57,6 +57,10 @@ public class TTextWriterLogger<TSource> : ALogger<TSource> where TSource : class
       _TextWriter = textWriterLogger._TextWriter;
     }
   }
+
+  public override ILogger CreateLoggerFor<TNewSource>() {
+    return new TTextWriterLogger<TNewSource>(this);
+  }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {

@@ -42,6 +42,10 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
     Name = typeof(TSource).GetNameEx();
     Initialize();
   }
+
+  public override ILogger CreateLoggerFor<TNewSource>() {
+    return new TFileLogger<TNewSource>(this, Filename);
+  }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   #region --- Converters -------------------------------------------------------------------------------------

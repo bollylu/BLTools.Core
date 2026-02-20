@@ -33,6 +33,10 @@ public class TDebugLogger<TSource> : ALogger<TSource> where TSource : class {
   public TDebugLogger(ILogger logger) : base(logger) {
     Name = typeof(TSource).GetNameEx();
   }
+
+  public override ILogger CreateLoggerFor<TNewSource>() {
+    return new TDebugLogger<TNewSource>(this);
+  }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   /// <inheritdoc/>

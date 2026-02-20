@@ -33,6 +33,10 @@ public class TConsoleLogger<TSource> : ALogger<TSource> where TSource : class {
   public TConsoleLogger(ILogger logger) : base(logger) {
     Name = typeof(TSource).GetNameEx();
   }
+
+  public override ILogger CreateLoggerFor<TNewSource>() {
+    return new TConsoleLogger<TNewSource>(this);
+  }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {

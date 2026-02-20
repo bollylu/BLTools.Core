@@ -290,4 +290,6 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
 
 
   #endregion --- Special for tests -----------------------------------------
+
+  public abstract ILogger CreateLoggerFor<TNewSource>() where TNewSource : class;
 }
