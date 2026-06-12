@@ -30,3 +30,6 @@
 
 ### 7.1.3
 - Added new ANSI colors to AnsiColorExtensions
+
+### 7.1.4
+- Bit of a cleanup of readme and changelog

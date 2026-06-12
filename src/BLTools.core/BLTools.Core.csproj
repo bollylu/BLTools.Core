@@ -27,12 +27,4 @@
     <Compile Remove="Logging\LoggerHelper.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="_global_\readme.md">
-      <PackagePath>\</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>True</Pack>
-    </None>
-  </ItemGroup>
-
 </Project>

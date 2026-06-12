@@ -4,7 +4,6 @@ A comprehensive library of extension methods, utilities, and helper classes for 
 
 ## Supported Frameworks
 
-- .NET 8.x
 - .NET 9.x
 - .NET 10.x
 
@@ -52,13 +51,9 @@ Robust command-line argument parser supporting:
 - Case-sensitive or case-insensitive matching
 - Culture-specific value parsing
 
-**Usage Example:**
-
 ### Text Formatting
-
-#### TextBox
-
-Create formatted text boxes and borders around messages for improved console readability.
+- Ansi color codes for console output
+- Boxing and text alignment utilities
 
 ### Data Structures
 
@@ -79,8 +74,8 @@ Or via Package Manager:
 
 ## Requirements
 
-- .NET 8.0 or later
-- C# 14.0 (latest language features with preview features enabled)
+- .NET 9.0 or later
+- C# 14.0
 
 ## Author
 
@@ -88,8 +83,8 @@ Luc Bolly
 
 ## Changelog
 
-For detailed changes and version history, see the [changelog](./src/BLTools.core/_global_/changelog.txt).
+For detailed changes and version history, see the [changelog](./src/BLTools.core/_global_/changelog.md).
 
 ## License
 
-See LICENSE file for details.
+MIT License. See [LICENSE](./LICENSE) for details.

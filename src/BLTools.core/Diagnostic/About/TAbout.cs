@@ -47,7 +47,7 @@ public class TAbout : IAbout {
   }
   private Version? _CurrentVersion;
   /// <inheritdoc/>
-  public string ChangeLogSource { get; init; } = "_global_.changelog.txt";
+  public string ChangeLogSource { get; init; } = "_global_.changelog.md";
   /// <inheritdoc/>
   public string ChangeLog {
     get {
