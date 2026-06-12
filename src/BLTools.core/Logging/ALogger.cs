@@ -9,7 +9,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
 
   public string Name { get; init; } = string.Empty;
 
-  public ILoggerOptions Options { get; private set; } = new TLoggerOptions();
+  public ILoggerOptions Options { get; init; } = new TLoggerOptions();
 
   /// <summary>
   /// Is the logger busy ?

@@ -109,19 +109,16 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
       #endregion --- Ensure we can safely write --------------------------------------------
 
       IsBusy = true;
-      File.AppendText(Filename).WriteLine(BuildLogLine(text, source, severity));
+      try {
+        using (FileStream Stream = new FileStream(Filename, FileMode.Append, FileAccess.Write, FileShare.Read)) {
+          using (StreamWriter Writer = new StreamWriter(Stream)) {
+            Writer.Write(BuildLogLine(text, source, severity));
+          }
+        }
+      } catch (Exception ex) {
+        Debug.WriteLine($"Unable to write to log file {Filename.WithQuotes()} : {ex.Message}");
+      }
       IsBusy = false;
-
-      //string ProcessedText = text.Replace(CRLF, CR);
-      //StringBuilder Builder = new StringBuilder();
-      //foreach (string TextItem in ProcessedText.Split(CR, StringSplitOptions.None)) {
-      //  Builder.AppendLine(BuildLogLine(TextItem, source, severity));
-      //}
-      //try {
-      //  File.AppendText(Filename).Write(Builder.ToString());
-      //} catch (Exception ex) {
-      //  Trace.WriteLine(ex.Message);
-      //}
 
     }
   }
@@ -136,7 +133,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   public virtual void ResetLog() {
     lock (_Lock) {
       try {
-        File.Delete(Filename);
+        File.CreateText(Filename).Close();
       } catch (Exception ex) {
         Debug.WriteLine($"Unable to ResetLog for {Filename.WithQuotes()} : {ex.Message}");
       }

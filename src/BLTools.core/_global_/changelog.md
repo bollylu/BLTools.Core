@@ -36,3 +36,6 @@
 
 ### 7.1.5
 - Fixed an in TFileLogger where the file stream was not being properly handled.
+
+### 7.1.6
+- Fixed big issue with TFileLogger
