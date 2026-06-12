@@ -252,6 +252,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
 
   public virtual void Ok(string additionalInfo = "", [CallerMemberName] string caller = "") {
     Log(MESSAGE_OK, caller);
+    Log(additionalInfo, caller);
   }
 
   public virtual void Failed(Exception ex, [CallerMemberName] string caller = "") {
@@ -267,7 +268,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   }
 
   public virtual void Dump<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
-    Log(data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth}, sourceName), caller);
+    Log(data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth }, sourceName), caller);
   }
 
   public virtual void DumpBox<TData>(TData data, SObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
@@ -282,7 +283,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   public virtual void DumpBox<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
     TTextBox TextBox = new TTextBox() {
       Title = data.GetDisplayName(sourceName),
-      Content = data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth}, sourceName)
+      Content = data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth }, sourceName)
     };
 
     Log(TextBox.Render(), caller);

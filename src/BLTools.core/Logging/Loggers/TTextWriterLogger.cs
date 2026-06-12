@@ -64,6 +64,29 @@ public class TTextWriterLogger<TSource> : ALogger<TSource> where TSource : class
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   protected override void LogText(string text = "", string source = "", ESeverity severity = ESeverity.Info) {
-    _TextWriter.Write(BuildLogLine(text, source, severity));
+    #region === Validate parameters ===
+    if (text.IsEmpty()) {
+      return;
+    }
+
+    if (severity < Options.SeverityLimit) {
+      return;
+    }
+    #endregion === Validate parameters ===
+
+    lock (_Lock) {
+
+      #region --- Ensure we can safely write --------------------------------------------
+      DateTime StartTime = DateTime.Now;
+      while (IsBusy && (DateTime.Now - StartTime).TotalMilliseconds < Options.Timeout) {
+        Thread.Sleep(2);
+      }
+      if (IsBusy) {
+        throw new TimeoutException($"Timeout writing to log");
+      }
+      #endregion --- Ensure we can safely write --------------------------------------------
+      _TextWriter.Write(BuildLogLine(text, source, severity));
+
+    }
   }
 }

@@ -12,14 +12,14 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   /// <summary>
   /// The full filename receiving the log
   /// </summary>
-  public string Filename { get; }
+  public string Filename { get; private set; }
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
   /// <summary>
   /// A new TFileLogger of type T
   /// </summary>
   public TFileLogger(string filename) : base(TLoggerOptions.Default) {
-    Filename = filename;
+    Filename = filename ?? string.Empty;
     Name = typeof(TSource).GetNameEx();
     Initialize();
   }
@@ -28,7 +28,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
   /// A new TFileLogger of type T
   /// </summary>
   public TFileLogger(string filename, ILoggerOptions options) : base(options) {
-    Filename = filename;
+    Filename = filename ?? string.Empty;
     Name = typeof(TSource).GetNameEx();
     Initialize();
   }
@@ -109,17 +109,20 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
       #endregion --- Ensure we can safely write --------------------------------------------
 
       IsBusy = true;
-      string ProcessedText = text.Replace(CRLF, CR);
-      StringBuilder Builder = new StringBuilder();
-      foreach (string TextItem in ProcessedText.Split(CR, StringSplitOptions.None)) {
-        Builder.AppendLine(BuildLogLine(TextItem, source, severity));
-      }
-      try {
-        File.AppendText(Builder.ToString());
-      } catch (Exception ex) {
-        Trace.WriteLine(ex.Message);
-      }
+      File.AppendText(Filename).WriteLine(BuildLogLine(text, source, severity));
       IsBusy = false;
+
+      //string ProcessedText = text.Replace(CRLF, CR);
+      //StringBuilder Builder = new StringBuilder();
+      //foreach (string TextItem in ProcessedText.Split(CR, StringSplitOptions.None)) {
+      //  Builder.AppendLine(BuildLogLine(TextItem, source, severity));
+      //}
+      //try {
+      //  File.AppendText(Filename).Write(Builder.ToString());
+      //} catch (Exception ex) {
+      //  Trace.WriteLine(ex.Message);
+      //}
+
     }
   }
   #endregion --- ALogger abstract methods -----------------------------------------

@@ -33,3 +33,6 @@
 
 ### 7.1.4
 - Bit of a cleanup of readme and changelog
+
+### 7.1.5
+- Fixed an in TFileLogger where the file stream was not being properly handled.

@@ -1,4 +1,4 @@
-﻿namespace BLTools.core.Logging.Loggers;
+﻿namespace BLTools.Core.Logging.Loggers;
 
 public static class TLogger {
   public static ILogger CreateLoggerFor<TSource>(ILogger sourceLogger) where TSource : class {
