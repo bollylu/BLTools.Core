@@ -24,3 +24,6 @@
 
 ### 7.1.1
 - Added CreateLoggerFor to ILogger to easily duplicate loggers with the same configuration but different class name
+
+### 7.1.2
+- Added missing FG_White to AnsiColorExtensions

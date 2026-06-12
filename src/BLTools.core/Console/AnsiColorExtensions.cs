@@ -8,6 +8,7 @@ public static class AnsiColorExtensions {
   public static string FG_Blue(this string source) => $"\e[34m{source}\e[0m";
   public static string FG_Magenta(this string source) => $"\e[35m{source}\e[0m";
   public static string FG_Cyan(this string source) => $"\e[36m{source}\e[0m";
+  public static string FG_White(this string source) => $"\e[37m{source}\e[0m";
 
   public static string BG_Red(this string source) => $"\e[41m{source}\e[0m";
   public static string BG_Green(this string source) => $"\e[42m{source}\e[0m";
