@@ -27,3 +27,6 @@
 
 ### 7.1.2
 - Added missing FG_White to AnsiColorExtensions
+
+### 7.1.3
+- Added new ANSI colors to AnsiColorExtensions
