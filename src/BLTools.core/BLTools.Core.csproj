@@ -16,8 +16,11 @@
 
   <ItemGroup>
     <Compile Remove="Logging\LoggerMessages\**" />
+    <Compile Remove="Security\Encryption\Asymmetric\**" />
     <EmbeddedResource Remove="Logging\LoggerMessages\**" />
+    <EmbeddedResource Remove="Security\Encryption\Asymmetric\**" />
     <None Remove="Logging\LoggerMessages\**" />
+    <None Remove="Security\Encryption\Asymmetric\**" />
   </ItemGroup>
 
   <ItemGroup>

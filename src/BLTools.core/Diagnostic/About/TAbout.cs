@@ -227,7 +227,7 @@ public class TAbout : IAbout {
       return null;
     }
     string FullResourceName = $"{assembly.GetName().Name}.{resourceName}".ToLowerInvariant();
-    string? RetVal = assembly.GetManifestResourceNames().FirstOrDefault(x => x.ToLowerInvariant() == FullResourceName);
+    string? RetVal = assembly.GetManifestResourceNames().FirstOrDefault(x => x.Equals(FullResourceName, StringComparison.OrdinalIgnoreCase));
     return RetVal;
   }
   #endregion --- I/O async --------------------------------------------

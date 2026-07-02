@@ -64,7 +64,7 @@ public class TFileLogger<TSource> : ALogger<TSource> where TSource : class {
     }
 
     if (string.IsNullOrWhiteSpace(Filename)) {
-      throw new ArgumentException($"Unable to create {nameof(TFileLogger<TSource>)} : filename is null or empty");
+      throw new ArgumentException($"Unable to create {nameof(TFileLogger<>)} : filename is null or empty");
     }
 
     try {

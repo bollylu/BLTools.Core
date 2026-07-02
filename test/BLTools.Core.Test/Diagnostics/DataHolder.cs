@@ -1,4 +1,4 @@
-﻿namespace BLTools.Test.Diagnostics;
+﻿namespace BLTools.Core.Test.Diagnostics;
 
 #region --- IInnerData --------------------------------------------
 public interface IInnerData {
@@ -16,7 +16,9 @@ public class TDataHolder : ALoggable, IInnerData {
 
   public bool IsDone = true;
 
+#pragma warning disable CS0414
   private readonly long ExecutionCount = 38;
+#pragma warning restore CS0414
 }
 
 public class TDataHolder2 : IInnerData {
@@ -51,7 +53,9 @@ public class TComplexDataHolder2 : IData {
   public IInnerData InnerData2 { get; set; } = new TDataHolder() { Name = "Other", Description = "blabla ...", Age = 33 };
   public List<IMoreData> MoreData { get; } = [];
 
+#pragma warning disable CS0414
   private readonly double PiValue = 3.1416d;
+#pragma warning restore CS0414
 
   static public TComplexDataHolder2 Empty => new TComplexDataHolder2();
 

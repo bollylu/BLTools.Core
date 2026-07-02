@@ -39,3 +39,6 @@
 
 ### 7.1.6
 - Fixed big issue with TFileLogger
+
+### 7.2.0
+- Added Security namespace with Hashing and  Symmetric Encryption utilities

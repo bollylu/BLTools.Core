@@ -1,4 +1,6 @@
-﻿namespace BLTools.Test.Diagnostics;
+﻿using BLTools.Core.Test.Diagnostics;
+
+namespace BLTools.Test.Diagnostics;
 
 public class DiagnosticsTest_Dump {
 

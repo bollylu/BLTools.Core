@@ -8,7 +8,7 @@ public class TFixedSizeQueue<T> {
 
   private readonly int _Size;
   private readonly Queue<T> _Items;
-  private readonly object _Lock = new object();
+  private readonly Lock _Lock = new Lock();
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
   /// <summary>
@@ -41,7 +41,7 @@ public class TFixedSizeQueue<T> {
   /// <exception cref="ApplicationException"></exception>
   public T Dequeue() {
     lock (_Lock) {
-      if (_Items.Any()) {
+      if (_Items.Count != 0) {
         return _Items.Dequeue();
       }
     }
