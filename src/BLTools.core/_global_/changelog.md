@@ -42,3 +42,8 @@
 
 ### 7.2.0
 - Added Security namespace with Hashing and  Symmetric Encryption utilities
+
+### 7.2.1
+- Fixed TAbout
+- In AnsiColorExtensions, when surrounding a string that already terminates with a reset code, do not add another reset code at the end of the string.
+ 

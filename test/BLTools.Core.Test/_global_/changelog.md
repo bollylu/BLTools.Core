@@ -1,4 +1,4 @@
-﻿* 1.0.0
+﻿### 1.0.0
 - Conversion from previous version 4.5.28, to .NET 6.x only
 - Added TABout, _global_ folder
 - Tests for TChrono
@@ -6,7 +6,7 @@
 - New tests for ILogger
 - Reorganization of namespaces as BLTools.Test.xxxxxx
 
-* 1.1.0
+### 1.1.0
 - Added Tests for Diagnostic.Dump()
 - Build and execute for .NET 7.x only
 
@@ -16,3 +16,7 @@
 
 ### 2.1.0
 - Some reorganisation of the tests
+
+### 2.2.0
+- Fixed tests for TAbout
+- Added test for ansi color extensions

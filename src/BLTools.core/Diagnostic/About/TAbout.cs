@@ -5,71 +5,43 @@ namespace BLTools.Core.Diagnostic;
 /// <inheritdoc/>
 public class TAbout : IAbout {
 
-  private readonly Assembly? _Assembly;
+  private readonly Assembly _Assembly;
 
   /// <summary>
-  /// The logger
+  /// The logger, default to a <see cref="TTraceLogger"/> if not set
   /// </summary>
-  public ILogger Logger { get; protected set; } = new TConsoleLogger();
+  public ILogger Logger { get; init; } = new TTraceLogger();
 
   /// <inheritdoc/>
-  public string Name {
-    get {
-      return string.IsNullOrWhiteSpace(_Name) ? _Name = _Assembly?.GetName().Name ?? "" : _Name;
-    }
-    set {
-      _Name = value;
-    }
-  }
-  private string? _Name;
+  public string Name { get => field ??= _Assembly?.GetName().Name ?? ""; set; }
 
   /// <inheritdoc/>
-  public string Description {
-    get {
-      return string.IsNullOrWhiteSpace(_Description) ? _Description = _Assembly?.GetName().FullName ?? "" : _Description;
-    }
-    set {
-      _Description = value;
-    }
-  }
-  private string? _Description;
+  public string Description { get => field ??= _Assembly?.GetName().FullName ?? string.Empty; set; }
 
   /// <inheritdoc/>
   public string VersionSource { get; init; } = "_global_.version.txt";
+
   /// <inheritdoc/>
-  public Version CurrentVersion {
-    get {
-      return _CurrentVersion ??= new Version(0, 0, 0);
-    }
-    set {
-      _CurrentVersion = value;
-    }
-  }
-  private Version? _CurrentVersion;
+  public Version CurrentVersion { get => field ??= new Version(0, 0, 0); set; }
+
   /// <inheritdoc/>
   public string ChangeLogSource { get; init; } = "_global_.changelog.md";
   /// <inheritdoc/>
-  public string ChangeLog {
-    get {
-      return _ChangeLog ??= "";
-    }
-    set {
-      _ChangeLog = value;
-    }
-  }
-  private string? _ChangeLog;
+  public string ChangeLog { get; set; } = string.Empty;
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
   /// <summary>
   /// A new TAbout
   /// </summary>
-  public TAbout() { }
+  public TAbout() {
+    _Assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+  }
 
   /// <summary>
   /// A new TAbout for a specific assembly
   /// </summary>
   /// <param name="assembly">The assembly where the TAbout belongs</param>
-  public TAbout(Assembly? assembly) {
+  public TAbout(Assembly assembly) {
     _Assembly = assembly;
   }
 
@@ -80,6 +52,28 @@ public class TAbout : IAbout {
   /// Initialize the data content by reading values
   /// </summary>
   public void Initialize() {
+    if (_IsInitialized || _IsInitializing) {
+      return;
+    }
+
+    _IsInitializing = true;
+
+    if (VersionSource is not null) {
+      CurrentVersion = ReadVersion(VersionSource);
+    }
+
+    if (ChangeLogSource is not null) {
+      ChangeLog = ReadChangeLog(ChangeLogSource);
+    }
+
+    _IsInitializing = false;
+    _IsInitialized = true;
+  }
+
+  /// <summary>
+  /// Initialize the data content by reading values asynchronously
+  /// </summary>
+  public async Task InitializeAsync() {
     if (_IsInitialized) {
       return;
     }
@@ -87,18 +81,16 @@ public class TAbout : IAbout {
       return;
     }
     _IsInitializing = true;
-
     if (VersionSource is not null) {
-      ReadVersion(VersionSource);
+      CurrentVersion = await ReadVersionAsync(VersionSource);
     }
-
     if (ChangeLogSource is not null) {
-      ReadChangeLog(ChangeLogSource);
+      ChangeLog = await ReadChangeLogAsync(ChangeLogSource);
     }
-
     _IsInitializing = false;
     _IsInitialized = true;
   }
+
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
   #region --- Converters -------------------------------------------------------------------------------------
@@ -118,65 +110,61 @@ public class TAbout : IAbout {
 
   #region --- I/O async --------------------------------------------
   /// <inheritdoc/>
-  public async Task<Version?> ReadVersionAsync(Stream source) {
+  public async Task<Version> ReadVersionAsync(Stream source) {
     #region === Validate parameters ===
     if (source is null) {
-      Logger?.LogError("Unable to read version : source is null");
-      return null;
+      Logger.LogError("Unable to read version : source is null");
+      return new Version(0, 0);
     }
     #endregion === Validate parameters ===
 
+    Version RetVal;
     try {
       using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
-        CurrentVersion = Version.Parse(await Reader.ReadToEndAsync());
+        RetVal = Version.Parse(await Reader.ReadToEndAsync());
       }
     } catch (Exception ex) {
-      Logger?.LogError($"Unable to read version : {ex.Message}");
-      CurrentVersion = new Version(0, 0, 0);
+      Logger.LogErrorBox("Unable to read version", ex);
+      RetVal = new Version(0, 0);
     }
-    return CurrentVersion;
+    return RetVal;
 
   }
   /// <inheritdoc/>
-  public async Task<Version?> ReadVersionAsync(string source) {
+  public async Task<Version> ReadVersionAsync(string source) {
     #region === Validate parameters ===
-    if (_Assembly is null) {
-      throw new InvalidOperationException("Unable to read version : assembly is null");
-    }
-
     if (source is null) {
-      Logger?.LogError("Unable to read version : source is null");
-      return null;
+      Logger.LogError("Unable to read version : source is null");
+      return new Version(0, 0);
     }
     #endregion === Validate parameters ===
 
     try {
       string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
       if (ResourceName is null) {
-        return CurrentVersion;
+        return new Version(0, 0);
       }
       using (Stream? VersionStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (VersionStream is null) {
-          return CurrentVersion;
+          return new Version(0, 0);
         }
         using (TextReader Reader = new StreamReader(VersionStream)) {
-          CurrentVersion = Version.Parse(await Reader.ReadToEndAsync());
+          return Version.Parse(await Reader.ReadToEndAsync());
         }
-        return CurrentVersion;
       }
     } catch (Exception ex) {
       Logger?.LogError($"Unable to read version : {ex.Message}");
-      CurrentVersion = new Version(0, 0);
-      return CurrentVersion;
+      return new Version(0, 0);
     }
 
   }
+
   /// <inheritdoc/>
-  public async Task<string?> ReadChangeLogAsync(Stream source) {
+  public async Task<string> ReadChangeLogAsync(Stream source) {
     #region === Validate parameters ===
     if (source is null) {
       Logger?.LogError("Unable to read change log : source is null");
-      return null;
+      return string.Empty;
     }
     #endregion === Validate parameters ===
 
@@ -186,26 +174,22 @@ public class TAbout : IAbout {
     return ChangeLog;
   }
   /// <inheritdoc/>
-  public async Task<string?> ReadChangeLogAsync(string source) {
+  public async Task<string> ReadChangeLogAsync(string source) {
     #region === Validate parameters ===
-    if (_Assembly is null) {
-      throw new InvalidOperationException("Unable to read changelog : assembly is null");
-    }
-
     if (string.IsNullOrWhiteSpace(source)) {
-      Logger?.LogError("Unable to read change log : source is null or invalid");
-      return null;
+      Logger.LogError("Unable to read change log : source is null or invalid");
+      return string.Empty;
     }
     #endregion === Validate parameters ===
 
     try {
       string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
       if (ResourceName is null) {
-        return null;
+        return string.Empty;
       }
       using (Stream? ChangeLogStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (ChangeLogStream is null) {
-          return null;
+          return string.Empty;
         }
         using (TextReader Reader = new StreamReader(ChangeLogStream)) {
           ChangeLog = await Reader.ReadToEndAsync();
@@ -215,18 +199,15 @@ public class TAbout : IAbout {
     } catch (Exception ex) {
       Logger?.LogError($"Unable to read changelog : {ex.Message}");
       ChangeLog = "";
-      return null;
+      return string.Empty;
     }
   }
 
   private static string? _GetResourceNameCaseInsensitive(Assembly assembly, string resourceName) {
-    if (assembly is null) {
-      throw new InvalidOperationException("Unable to search for resource : assembly is null");
-    }
     if (string.IsNullOrWhiteSpace(resourceName)) {
       return null;
     }
-    string FullResourceName = $"{assembly.GetName().Name}.{resourceName}".ToLowerInvariant();
+    string FullResourceName = $"{assembly.GetName().Name}.{resourceName}";
     string? RetVal = assembly.GetManifestResourceNames().FirstOrDefault(x => x.Equals(FullResourceName, StringComparison.OrdinalIgnoreCase));
     return RetVal;
   }
@@ -234,64 +215,61 @@ public class TAbout : IAbout {
 
   #region --- I/O --------------------------------------------
   /// <inheritdoc/>
-  public Version? ReadVersion(Stream source) {
+  public Version ReadVersion(Stream source) {
     #region === Validate parameters ===
     if (source is null) {
-      Logger?.LogError("Unable to read version : source is null");
-      return null;
+      Logger.LogError("Unable to read version : source is null");
+      return new Version(0, 0);
     }
     #endregion === Validate parameters ===
+
+    Version RetVal;
     using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
       try {
-        CurrentVersion = Version.Parse(Reader.ReadToEnd());
+        RetVal = Version.Parse(Reader.ReadToEnd());
       } catch (Exception ex) {
-        Logger?.LogError($"Unable to read version : {ex.Message}");
-        CurrentVersion = new Version(0, 0, 0);
+        Logger.LogErrorBox("Unable to read version", ex);
+        RetVal = new Version(0, 0, 0);
       }
     }
 
-    return CurrentVersion;
+    return RetVal;
   }
   /// <inheritdoc/>
-  public Version? ReadVersion(string source) {
+  public Version ReadVersion(string source) {
     #region === Validate parameters ===
-    if (_Assembly is null) {
-      throw new InvalidOperationException("Unable to read version : assembly is null");
-    }
-
     if (string.IsNullOrWhiteSpace(source)) {
-      Logger?.LogError("Unable to read version : source is null or invalid");
-      return null;
+      Logger.LogError("Unable to read version : source is null or invalid");
+      return new Version(0, 0);
     }
     #endregion === Validate parameters ===
 
     try {
       string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
       if (ResourceName is null) {
-        return CurrentVersion;
+        return new Version(0, 0);
       }
       using (Stream? VersionStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (VersionStream is null) {
-          return CurrentVersion;
+          return new Version(0, 0);
         }
         using (TextReader Reader = new StreamReader(VersionStream)) {
-          CurrentVersion = Version.Parse(Reader.ReadToEnd());
+          return Version.Parse(Reader.ReadToEnd());
         }
-        return CurrentVersion;
       }
     } catch (Exception ex) {
-      Logger?.LogError($"Unable to read version : {ex.Message}");
-      CurrentVersion = new Version(0, 0);
-      return CurrentVersion;
+      Logger.LogErrorBox("Unable to read version", ex);
+      return new Version(0, 0);
     }
 
   }
+
   /// <inheritdoc/>
-  public string? ReadChangeLog(Stream source) {
+  public string ReadChangeLog(Stream source) {
     #region === Validate parameters ===
     if (source is null) {
-      Logger?.LogError("Unable to read change log : source is null");
-      return null;
+      Logger.LogError("Unable to read change log : source is null");
+      return string.Empty;
     }
     #endregion === Validate parameters ===
 
@@ -301,7 +279,7 @@ public class TAbout : IAbout {
     return ChangeLog;
   }
   /// <inheritdoc/>
-  public string? ReadChangeLog(string source) {
+  public string ReadChangeLog(string source) {
     #region === Validate parameters ===
     if (_Assembly is null) {
       throw new InvalidOperationException("Unable to read changelog : assembly is null");
@@ -316,11 +294,11 @@ public class TAbout : IAbout {
     try {
       string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
       if (ResourceName is null) {
-        return null;
+        return string.Empty;
       }
       using (Stream? ChangeLogStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (ChangeLogStream is null) {
-          return null;
+          return string.Empty;
         }
         using (TextReader Reader = new StreamReader(ChangeLogStream)) {
           ChangeLog = Reader.ReadToEnd();
@@ -328,9 +306,9 @@ public class TAbout : IAbout {
         }
       }
     } catch (Exception ex) {
-      Logger?.LogError($"Unable to read changelog : {ex.Message}");
+      Logger.LogErrorBox("Unable to read changelog", ex);
       ChangeLog = "";
-      return null;
+      return string.Empty;
     }
   }
 
@@ -340,19 +318,21 @@ public class TAbout : IAbout {
   /// <summary>
   /// An empty TAbout
   /// </summary>
-  public static TAbout Empty => _Empty ??= new TAbout();
-  private static TAbout? _Empty;
+  public static TAbout Empty => field ??= new TAbout();
 
   /// <summary>
   /// The TAbout for the entry assembly
   /// </summary>
-  public static TAbout Entry => _Entry ??= new TAbout(Assembly.GetEntryAssembly());
-  private static TAbout? _Entry;
+  public static TAbout Entry => field ??= new TAbout(Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly());
+
+  /// <summary>
+  /// The TAbout for the entry assembly
+  /// </summary>
+  public static TAbout Executing => field ??= new TAbout(Assembly.GetExecutingAssembly());
 
   /// <summary>
   /// The TAbout for the calling assembly
   /// </summary>
-  public static TAbout Calling => _Calling ??= new TAbout(Assembly.GetCallingAssembly());
-  private static TAbout? _Calling;
+  public static TAbout Calling => field ??= new TAbout(Assembly.GetCallingAssembly());
   #endregion --- Static instances --------------------------------------------
 }

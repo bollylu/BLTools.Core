@@ -67,8 +67,8 @@ public static partial class ApplicationInfo {
   /// List of prefixes to ignore when asking for list of referenced assemblies
   /// </summary>
   public static readonly List<string> ExcludedAssemblies = [
-    "System",
-    "Microsoft",
+    nameof(System),
+    nameof(Microsoft),
     "netstandard",
     "Newtonsoft.json",
     "Nuget"
@@ -166,6 +166,9 @@ public static partial class ApplicationInfo {
     RetVal.AppendLine($"Processor count = {Environment.ProcessorCount}");
     RetVal.AppendLine($"Process id = {Environment.ProcessId}");
     RetVal.AppendLine($"Command line = {Environment.CommandLine.WithQuotes()}");
+    RetVal.AppendLine($"Is privileged process = {Environment.IsPrivilegedProcess}");
+    RetVal.AppendLine($"Version = {Environment.Version}");
+    RetVal.AppendLine($"Working set = {Environment.WorkingSet}");
 
     return RetVal.ToString().TrimEnd(Environment.NewLine.ToCharArray());
 

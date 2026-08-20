@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-
-using BLTools.Core.Logging;
-
-namespace BLTools.Core.Test;
+﻿namespace BLTools.Core.Test;
 
 public enum ETestEnum { A, B, C }
 

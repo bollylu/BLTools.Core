@@ -13,7 +13,7 @@ public class TLoggerPool {
   /// <summary>
   /// A logger by default
   /// </summary>
-  protected ILogger DefaultLogger { get; set; } = new TConsoleLogger();
+  protected ILogger DefaultLogger { get; set; } = new TTraceLogger();
 
   /// <summary>
   /// The type of the default logger
@@ -24,7 +24,7 @@ public class TLoggerPool {
   /// <summary>
   /// Internal list of loggers
   /// </summary>
-  protected readonly Dictionary<string, ILogger> _Items = new();
+  protected readonly Dictionary<string, ILogger> _Items = [];
   /// <summary>
   /// Locks the loggers
   /// </summary>
@@ -163,6 +163,7 @@ public class TLoggerPool {
     return source switch {
       TFileLogger<T> FileLogger => new TFileLogger<T>(FileLogger, FileLogger.Filename),
       TConsoleLogger<T> ConsoleLogger => new TConsoleLogger<T>(ConsoleLogger),
+      TTraceLogger<T> TraceLogger => new TTraceLogger<T>(TraceLogger),
       _ => throw new ApplicationException($"Invalid logger<T> type : {source?.GetType().GetNameEx() ?? "(unknown)"}")
     };
   }
