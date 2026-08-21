@@ -7,6 +7,7 @@ public class TAbout : IAbout {
 
   private readonly Assembly _Assembly;
 
+  #region --- Public properties ------------------------------------------------------------------------------
   /// <summary>
   /// The logger, default to a <see cref="TTraceLogger"/> if not set
   /// </summary>
@@ -28,6 +29,7 @@ public class TAbout : IAbout {
   public string ChangeLogSource { get; init; } = "_global_.changelog.md";
   /// <inheritdoc/>
   public string ChangeLog { get; set; } = string.Empty;
+  #endregion --- Public properties ---------------------------------------------------------------------------
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
   /// <summary>
@@ -111,49 +113,44 @@ public class TAbout : IAbout {
   #region --- I/O async --------------------------------------------
   /// <inheritdoc/>
   public async Task<Version> ReadVersionAsync(Stream source) {
-    #region === Validate parameters ===
-    if (source is null) {
-      Logger.LogError("Unable to read version : source is null");
-      return new Version(0, 0);
-    }
-    #endregion === Validate parameters ===
-
-    Version RetVal;
     try {
-      using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
-        RetVal = Version.Parse(await Reader.ReadToEndAsync());
+      #region === Validate parameters ===
+      if (source is null) {
+        throw new ArgumentNullException(nameof(source), "source is null");
       }
+      #endregion === Validate parameters ===
+
+      using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
+        return Version.Parse(await Reader.ReadToEndAsync());
+      }
+
     } catch (Exception ex) {
       Logger.LogErrorBox("Unable to read version", ex);
-      RetVal = new Version(0, 0);
-    }
-    return RetVal;
-
-  }
-  /// <inheritdoc/>
-  public async Task<Version> ReadVersionAsync(string source) {
-    #region === Validate parameters ===
-    if (source is null) {
-      Logger.LogError("Unable to read version : source is null");
       return new Version(0, 0);
     }
-    #endregion === Validate parameters ===
+  }
 
+  /// <inheritdoc/>
+  public async Task<Version> ReadVersionAsync(string source) {
     try {
-      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
-      if (ResourceName is null) {
-        return new Version(0, 0);
+
+      #region === Validate parameters ===
+      if (source is null) {
+        throw new ArgumentNullException(nameof(source), "source is null");
       }
+      #endregion === Validate parameters ===
+
+      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source) ?? throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
       using (Stream? VersionStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (VersionStream is null) {
-          return new Version(0, 0);
+          throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
         }
         using (TextReader Reader = new StreamReader(VersionStream)) {
           return Version.Parse(await Reader.ReadToEndAsync());
         }
       }
     } catch (Exception ex) {
-      Logger?.LogError($"Unable to read version : {ex.Message}");
+      Logger.LogError($"Unable to read version : {ex.Message}");
       return new Version(0, 0);
     }
 
@@ -161,44 +158,41 @@ public class TAbout : IAbout {
 
   /// <inheritdoc/>
   public async Task<string> ReadChangeLogAsync(Stream source) {
-    #region === Validate parameters ===
-    if (source is null) {
-      Logger?.LogError("Unable to read change log : source is null");
+    try {
+      #region === Validate parameters ===
+      if (source is null) {
+        throw new ArgumentNullException(nameof(source), "source is null");
+      }
+      #endregion === Validate parameters ===
+
+      using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
+        return await Reader.ReadToEndAsync();
+      }
+    } catch (Exception ex) {
+      Logger.LogError($"Unable to read changelog : {ex.Message}");
       return string.Empty;
     }
-    #endregion === Validate parameters ===
-
-    using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
-      ChangeLog = await Reader.ReadToEndAsync();
-    }
-    return ChangeLog;
   }
   /// <inheritdoc/>
   public async Task<string> ReadChangeLogAsync(string source) {
-    #region === Validate parameters ===
-    if (string.IsNullOrWhiteSpace(source)) {
-      Logger.LogError("Unable to read change log : source is null or invalid");
-      return string.Empty;
-    }
-    #endregion === Validate parameters ===
-
     try {
-      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
-      if (ResourceName is null) {
-        return string.Empty;
+      #region === Validate parameters ===
+      if (string.IsNullOrWhiteSpace(source)) {
+        throw new ArgumentNullException(nameof(source), $"source {source.OrNull().WithQuotes()} is invalid");
       }
+      #endregion === Validate parameters ===
+
+      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source) ?? throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
       using (Stream? ChangeLogStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (ChangeLogStream is null) {
-          return string.Empty;
+          throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
         }
         using (TextReader Reader = new StreamReader(ChangeLogStream)) {
-          ChangeLog = await Reader.ReadToEndAsync();
-          return ChangeLog;
+          return await Reader.ReadToEndAsync();
         }
       }
     } catch (Exception ex) {
-      Logger?.LogError($"Unable to read changelog : {ex.Message}");
-      ChangeLog = "";
+      Logger.LogError($"Unable to read changelog : {ex.Message}");
       return string.Empty;
     }
   }
@@ -216,42 +210,35 @@ public class TAbout : IAbout {
   #region --- I/O --------------------------------------------
   /// <inheritdoc/>
   public Version ReadVersion(Stream source) {
-    #region === Validate parameters ===
-    if (source is null) {
-      Logger.LogError("Unable to read version : source is null");
+    try {
+      #region === Validate parameters ===
+      if (source is null) {
+        throw new ArgumentNullException(nameof(source), "source is null");
+      }
+      #endregion === Validate parameters ===
+
+      using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
+        return Version.Parse(Reader.ReadToEnd());
+      }
+    } catch (Exception ex) {
+      Logger.LogErrorBox("Unable to read version", ex);
       return new Version(0, 0);
     }
-    #endregion === Validate parameters ===
-
-    Version RetVal;
-    using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
-      try {
-        RetVal = Version.Parse(Reader.ReadToEnd());
-      } catch (Exception ex) {
-        Logger.LogErrorBox("Unable to read version", ex);
-        RetVal = new Version(0, 0, 0);
-      }
-    }
-
-    return RetVal;
   }
+
   /// <inheritdoc/>
   public Version ReadVersion(string source) {
     #region === Validate parameters ===
     if (string.IsNullOrWhiteSpace(source)) {
-      Logger.LogError("Unable to read version : source is null or invalid");
-      return new Version(0, 0);
+      throw new ArgumentNullException(nameof(source), $"source {source.OrNull().WithQuotes()} is invalid");
     }
     #endregion === Validate parameters ===
 
     try {
-      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
-      if (ResourceName is null) {
-        return new Version(0, 0);
-      }
+      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source) ?? throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
       using (Stream? VersionStream = _Assembly.GetManifestResourceStream(ResourceName)) {
         if (VersionStream is null) {
-          return new Version(0, 0);
+          throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
         }
         using (TextReader Reader = new StreamReader(VersionStream)) {
           return Version.Parse(Reader.ReadToEnd());
@@ -266,44 +253,15 @@ public class TAbout : IAbout {
 
   /// <inheritdoc/>
   public string ReadChangeLog(Stream source) {
-    #region === Validate parameters ===
-    if (source is null) {
-      Logger.LogError("Unable to read change log : source is null");
-      return string.Empty;
-    }
-    #endregion === Validate parameters ===
-
-    using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
-      ChangeLog = Reader.ReadToEnd();
-    }
-    return ChangeLog;
-  }
-  /// <inheritdoc/>
-  public string ReadChangeLog(string source) {
-    #region === Validate parameters ===
-    if (_Assembly is null) {
-      throw new InvalidOperationException("Unable to read changelog : assembly is null");
-    }
-
-    if (string.IsNullOrWhiteSpace(source)) {
-      Logger?.LogError("Unable to read change log : source is null or invalid");
-      return null;
-    }
-    #endregion === Validate parameters ===
-
     try {
-      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source);
-      if (ResourceName is null) {
-        return string.Empty;
+      #region === Validate parameters ===
+      if (source is null) {
+        throw new ArgumentNullException(nameof(source), "source is null");
       }
-      using (Stream? ChangeLogStream = _Assembly.GetManifestResourceStream(ResourceName)) {
-        if (ChangeLogStream is null) {
-          return string.Empty;
-        }
-        using (TextReader Reader = new StreamReader(ChangeLogStream)) {
-          ChangeLog = Reader.ReadToEnd();
-          return ChangeLog;
-        }
+      #endregion === Validate parameters ===
+
+      using (TextReader Reader = new StreamReader(stream: source, leaveOpen: true)) {
+        return Reader.ReadToEnd();
       }
     } catch (Exception ex) {
       Logger.LogErrorBox("Unable to read changelog", ex);
@@ -311,7 +269,29 @@ public class TAbout : IAbout {
       return string.Empty;
     }
   }
+  /// <inheritdoc/>
+  public string ReadChangeLog(string source) {
+    try {
+      #region === Validate parameters ===
+      if (string.IsNullOrWhiteSpace(source)) {
+        throw new ArgumentNullException(nameof(source), $"source {source.OrNull().WithQuotes()} is invalid");
+      }
+      #endregion === Validate parameters ===
 
+      string? ResourceName = _GetResourceNameCaseInsensitive(_Assembly, source) ?? throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
+      using (Stream? ChangeLogStream = _Assembly.GetManifestResourceStream(ResourceName)) {
+        if (ChangeLogStream is null) {
+          throw new InvalidOperationException($"Resource {source.WithQuotes()} not found in assembly {_Assembly.GetName().Name.OrNull().WithQuotes()}");
+        }
+        using (TextReader Reader = new StreamReader(ChangeLogStream)) {
+          return Reader.ReadToEnd();
+        }
+      }
+    } catch (Exception ex) {
+      Logger.LogErrorBox("Unable to read changelog", ex);
+      return string.Empty;
+    }
+  }
   #endregion --- I/O --------------------------------------------
 
   #region --- Static instances --------------------------------------------

@@ -1,4 +1,6 @@
 ﻿
+using System.Reflection;
+
 using BLTools.Core.Diagnostic;
 
 namespace BLTools.Core.Test;
@@ -45,12 +47,21 @@ public static class GlobalSettings {
   /// <summary>
   /// The TAbout of this assembly
   /// </summary>
-  public static TAbout ExecutingAbout {
-    get {
-      return _ExecutingAbout ??= new TAbout(AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name == nameof(BLTools.Core.Test)));
-    }
-  }
+#if NET10_0_OR_GREATER
+  public static TAbout ExecutingAbout => field ??= new TAbout(Assembly.GetExecutingAssembly());
+  public static TAbout CallingAbout => field ??= new TAbout(Assembly.GetCallingAssembly());
+  public static TAbout EntryAbout => field ??= new TAbout(Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly());
+#else
+  public static TAbout ExecutingAbout => _ExecutingAbout ??= new TAbout(Assembly.GetExecutingAssembly());
   private static TAbout? _ExecutingAbout;
+
+  public static TAbout CallingAbout => _CallingAbout ??= new TAbout(Assembly.GetCallingAssembly());
+  private static TAbout? _CallingAbout;
+
+  public static TAbout EntryAbout => _EntryAbout ??= new TAbout(Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly());
+  private static TAbout? _EntryAbout;
+#endif
+
 
 
 }
