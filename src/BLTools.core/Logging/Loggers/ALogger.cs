@@ -263,15 +263,15 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
     LogError($"{MESSAGE_FAILED} : {additionalInfo}", caller);
   }
 
-  public virtual void Dump<TData>(TData data, SObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
+  public virtual void Dump<TData>(TData data, TObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
     Log(data.Dump(options, sourceName), caller);
   }
 
   public virtual void Dump<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
-    Log(data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth }, sourceName), caller);
+    Log(data.Dump(new TObjectDumpOptions() { MaxDepth = maxDepth }, sourceName), caller);
   }
 
-  public virtual void DumpBox<TData>(TData data, SObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
+  public virtual void DumpBox<TData>(TData data, TObjectDumpOptions options, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
     TTextBox TextBox = new TTextBox() {
       Title = data.GetDisplayName(sourceName),
       Content = data.Dump(options, sourceName)
@@ -283,7 +283,7 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   public virtual void DumpBox<TData>(TData data, int maxDepth, [CallerArgumentExpression(nameof(data))] string sourceName = "", [CallerMemberName] string caller = "") {
     TTextBox TextBox = new TTextBox() {
       Title = data.GetDisplayName(sourceName),
-      Content = data.Dump(new SObjectDumpOptions() { MaxDepth = maxDepth }, sourceName)
+      Content = data.Dump(new TObjectDumpOptions() { MaxDepth = maxDepth }, sourceName)
     };
 
     Log(TextBox.Render(), caller);
@@ -292,5 +292,6 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
 
   #endregion --- Special for tests -----------------------------------------
 
-  public abstract ILogger CreateLoggerFor<TNewSource>() where TNewSource : class;
+  public abstract ILogger CreateLoggerFor<NewSource>() where NewSource : class;
+  
 }

@@ -62,20 +62,20 @@ public interface ILogger : IDisposable {
   void Failed(string additionalInfo = "", [CallerMemberName] string caller = "");
 
   void Dump<TData>(TData source, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "") =>
-    Dump(source, SObjectDumpOptions.Default, sourceName, caller);
+    Dump(source, TObjectDumpOptions.Default, sourceName, caller);
 
-  void Dump<TData>(TData source, SObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
+  void Dump<TData>(TData source, TObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
   void Dump<TData>(TData source, int maxDepth, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
 
   void DumpBox<TData>(TData source, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "") =>
-    DumpBox(source, SObjectDumpOptions.Default, sourceName, caller);
-  void DumpBox<TData>(TData source, SObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
+    DumpBox(source, TObjectDumpOptions.Default, sourceName, caller);
+  void DumpBox<TData>(TData source, TObjectDumpOptions options, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
   void DumpBox<TData>(TData source, int maxDepth, [CallerArgumentExpression(nameof(source))] string sourceName = "", [CallerMemberName] string caller = "");
   #endregion --- Special for tests -----------------------------------------
 
-  public ILogger CreateLoggerFor<TSource>() where TSource : class;
+  ILogger CreateLoggerFor<TNewSource>() where TNewSource : class;
 }
 
 public interface ILogger<TSource> : ILogger where TSource : class {
-
+  
 }

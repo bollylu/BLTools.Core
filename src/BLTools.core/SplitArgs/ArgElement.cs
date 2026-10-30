@@ -55,7 +55,7 @@ public class ArgElement : IArgElement, IEquatable<ArgElement> {
 
   /// <inheritdoc/>
   public override bool Equals(object? obj) {
-    if (obj is not ArgElement other) {
+    if (obj is null || obj is not ArgElement other) {
       return false;
     }
 

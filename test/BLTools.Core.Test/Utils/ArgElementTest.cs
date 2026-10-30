@@ -1,4 +1,4 @@
-﻿namespace BLTools.Test.Cli;
+﻿namespace BLTools.Core.Test.Cli;
 
 /// <summary>
 ///This is a test class for ArgElementTest and is intended

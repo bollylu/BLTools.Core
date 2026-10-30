@@ -27,6 +27,8 @@
     <Compile Remove="Diagnostic\TraceInfo.cs" />
     <Compile Remove="Diagnostic\TraceInfo_Build.cs" />
     <Compile Remove="Diagnostic\TraceInfo_Support.cs" />
+    <Compile Remove="Extension methods\Object\ObjectExtension.cs" />
+    <Compile Remove="Extension methods\Object\ObjectExtensionObject.cs" />
     <Compile Remove="Logging\LoggerHelper.cs" />
   </ItemGroup>
 

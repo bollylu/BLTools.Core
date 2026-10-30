@@ -1,6 +1,6 @@
 ﻿namespace BLTools.Core;
 
-public struct SObjectDumpOptions {
+public class TObjectDumpOptions {
 
   public int MaxDepth { get; set { field = value.WithinLimits(0, 10); } } = 4;
 
@@ -19,11 +19,22 @@ public struct SObjectDumpOptions {
   public bool WithColors { get; set; } = false;
 
   #region --- Constructor(s) ---------------------------------------------------------------------------------
-  public SObjectDumpOptions() { }
+  public TObjectDumpOptions() { }
+  public TObjectDumpOptions(TObjectDumpOptions other) {
+    MaxDepth = other.MaxDepth;
+    BoxWidth = other.BoxWidth;
+    DumpPrivateFields = other.DumpPrivateFields;
+    DumpPrivateProperties = other.DumpPrivateProperties;
+    DumpPublicFields = other.DumpPublicFields;
+    DumpPublicProperties = other.DumpPublicProperties;
+    WithTitle = other.WithTitle;
+    Culture = other.Culture;
+    WithColors = other.WithColors;
+  }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
-  public static SObjectDumpOptions Default => new();
-  public static SObjectDumpOptions All => new() {
+  public static TObjectDumpOptions Default => new();
+  public static TObjectDumpOptions All => new() {
     DumpPrivateFields = true,
     DumpPrivateProperties = true,
     DumpPublicFields = true,

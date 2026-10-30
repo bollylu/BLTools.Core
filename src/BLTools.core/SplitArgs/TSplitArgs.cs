@@ -2,17 +2,19 @@ using System.Collections.Specialized;
 
 namespace BLTools.Core;
 
+[Obsolete("Use TSplitArgs instead")]
+public class  SplitArgs : TSplitArgs {}
+
 /// <summary>
 /// Splits arguments of CommandLine. You can use either / or - as parameter prefix or nothing but the keyword.
 /// If values are specified, they are separated from the keyword by an = sign.
-/// (c) 2004-2012 Luc Bolly
 /// </summary>
-public class SplitArgs : ISplitArgs {
+public class TSplitArgs : ISplitArgs {
 
   /// <summary>
   /// The keys/values internal storage
   /// </summary>
-  protected List<IArgElement> _Items = [];
+  private readonly List<IArgElement> _Items = [];
 
   /// <summary>
   /// Default culture for conversions
@@ -38,7 +40,7 @@ public class SplitArgs : ISplitArgs {
   /// <summary>
   /// Creates an empty dictonnary of command line arguments
   /// </summary>
-  public SplitArgs() {
+  public TSplitArgs() {
   }
   #endregion --- Constructor(s) ------------------------------------------------------------------------------
 
@@ -143,7 +145,6 @@ public class SplitArgs : ISplitArgs {
     }
   }
 
-
   /// <inheritdoc/>
   public void Parse(NameValueCollection queryStringItems) {
     #region === Validate parameters ===
@@ -175,28 +176,12 @@ public class SplitArgs : ISplitArgs {
 
 
   /// <inheritdoc/>
-  public IArgElement? this[int index] {
-    get {
-      IArgElement? CurrentElement = _Items.FirstOrDefault(a => a.Id == index);
-      if (CurrentElement is null) {
-        return new ArgElement(0, "", "");
-      } else {
-        return CurrentElement;
-      }
-    }
-  }
+  [DoNotDump]
+  public IArgElement? this[int index] => _Items.FirstOrDefault(a => a.Id == index);
 
   /// <inheritdoc/>
-  public IArgElement? this[string key] {
-    get {
-      IArgElement? CurrentElement = _Items.FirstOrDefault(a => a.Name == key);
-      if (CurrentElement is null) {
-        return new ArgElement(0, "", "");
-      } else {
-        return CurrentElement;
-      }
-    }
-  }
+  [DoNotDump]
+  public IArgElement? this[string key] => _Items.FirstOrDefault(a => a.Name.Equals(key, StringComparison.CurrentCultureIgnoreCase));
 
   /// <inheritdoc/>
   public IEnumerable<IArgElement> GetAll() {

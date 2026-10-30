@@ -20,7 +20,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_CommandLine_Gets3Args() {
     string cmdLine = "program.exe par1=val1 par2=val2";
-    ISplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(cmdLine);
     Assert.That(Args.Count(), Is.EqualTo(3));
   }
@@ -31,7 +31,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_CommandLineWithSpaces_Gets3Args() {
     string cmdLine = "program.exe par1=\"val1 with spaces\" par2=val2";
-    ISplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(cmdLine);
     Assert.That(Args.Count(), Is.EqualTo(3));
   }
@@ -42,7 +42,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_CommandLine_FirstArgIsProgram() {
     string cmdLine = "program.exe par1=val1 par2=val2";
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(cmdLine);
     Assert.That(Args.Any(), Is.True);
     Assert.That(Args[0]?.Name ?? "", Is.EqualTo("program.exe"));
@@ -54,7 +54,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_CommandLine_ContainsArgElement() {
     string cmdLine = "program.exe par1=val1 par2=val2";
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(cmdLine);
     Assert.That(Args.GetAll(), Does.Contain(new ArgElement(1, "par1", "val1")));
   }
@@ -65,7 +65,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_FromArray_Gets3Args() {
     IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.Count(), Is.EqualTo(3));
   }
@@ -76,7 +76,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_FromArray_FirstArgIsProgram() {
     IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args[0]?.Name ?? "", Is.EqualTo("program.exe"));
   }
@@ -87,7 +87,7 @@ public class SplitArgsTest {
   [Test]
   public void SplitArgsConstructor_FromArray_ContainsArgElement() {
     IEnumerable<string> Source = ["program.exe", "par1=val1", "par2=val2"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetAll(), Does.Contain(new ArgElement(1, "par1", "val1")));
   }
@@ -100,7 +100,7 @@ public class SplitArgsTest {
   public void SplitArgsConstructor_FromUrl_ContainsArgElement() {
     string Url = "arg1=value1";
     NameValueCollection TestCollection = HttpUtility.ParseQueryString(Url);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(TestCollection);
     Assert.That(Args.GetAll(), Does.Contain(new ArgElement(0, "arg1", "value1")));
   }
@@ -112,7 +112,7 @@ public class SplitArgsTest {
   public void SplitArgsConstructor_FromUrlTwoArgs_ContainsArgElement() {
     string Url = "arg1=value1&arg2=value2";
     NameValueCollection TestCollection = HttpUtility.ParseQueryString(Url);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(TestCollection);
     Assert.That(Args.GetAll(), Does.Contain(new ArgElement(0, "arg2", "value2")));
   }
@@ -127,7 +127,7 @@ public class SplitArgsTest {
   [Test]
   public void IsDefined_ValidParam_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.IsDefined("verbose"), Is.True);
   }
@@ -138,7 +138,7 @@ public class SplitArgsTest {
   [Test]
   public void IsDefined_BadParam_IsFalse() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.IsDefined("otherthanverbose"), Is.False);
   }
@@ -151,7 +151,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_KeyGenericString_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>("par1", ""), Is.EqualTo("val1"));
   }
@@ -211,7 +211,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_KeyGenericStringWithSpaces_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1 complex", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>("par1", ""), Is.EqualTo("val1 complex"));
   }
@@ -221,7 +221,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_KeyGenericInt_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<int>("par1", 0), Is.EqualTo(1236));
   }
@@ -234,7 +234,7 @@ public class SplitArgsTest {
                                                   $"/par1=1236{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}2365",
                                                   "/verbose"
                                                 ];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<double>("par1", 0, CultureInfo.CurrentCulture), Is.EqualTo(1236.2365D));
   }
@@ -244,7 +244,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_KeyGenericLong_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=654321987", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<long>("par1", 0), Is.EqualTo(654321987L), Args.GetValue<float>("par1", 0).ToString());
   }
@@ -257,7 +257,7 @@ public class SplitArgsTest {
                                                   $"/par1=1236{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}23",
                                                   "/verbose"
                                                 ];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<float>("par1", 0, CultureInfo.CurrentCulture), Is.EqualTo(1236.23F), Args.GetValue<float>("par1", 0).ToString());
   }
@@ -271,7 +271,7 @@ public class SplitArgsTest {
     IEnumerable<string> Source = ["program.exe", "/par1=12/6/1998", "/verbose"];
     Logger.Dump(Source);
 
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Logger.Message("Parsing data");
     Args.Parse(Source);
 
@@ -293,7 +293,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericString_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>(1, ""), Is.EqualTo("val1"));
   }
@@ -303,7 +303,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericStringWithSpaces_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1 complex", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>(1, ""), Is.EqualTo("val1 complex"));
   }
@@ -313,7 +313,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericInt_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<int>(1, 0), Is.EqualTo(1236));
   }
@@ -323,7 +323,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericDouble_IsTrue() {
     IEnumerable<string> Source = ["program.exe", $"/par1=1236{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}2365", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<double>(1, 0, CultureInfo.CurrentCulture), Is.EqualTo(1236.2365D));
   }
@@ -333,7 +333,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericLong_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=654321987", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<long>(1, 0), Is.EqualTo(654321987L));
   }
@@ -343,7 +343,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericFloat_IsTrue() {
     IEnumerable<string> Source = ["program.exe", $"/par1=1236{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}23", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<float>(1, 0, CultureInfo.CurrentCulture), Is.EqualTo(1236.23F));
   }
@@ -354,7 +354,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericDateTime_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=12/6/1998", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<DateTime>(1, DateTime.MinValue, CultureInfo.GetCultureInfo("FR-BE")), Is.EqualTo(new DateTime(1998, 6, 12)));
   }
@@ -367,7 +367,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericString_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1", "/verbose", "/par2=val2"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>(3, ""), Is.EqualTo("val2"));
   }
@@ -377,7 +377,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericStringWithSpaces_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=val1 complex", "/verbose", "/par2=val2 complex"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>(3, ""), Is.EqualTo("val2 complex"));
   }
@@ -387,7 +387,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericInt_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236", "/verbose", "/par2=98764"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<int>(3, 0), Is.EqualTo(98764));
   }
@@ -400,7 +400,7 @@ public class SplitArgsTest {
                                                              $"/par1=1236{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}2365",
                                                              "/verbose",
                                                              $"/par2=654789{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}123456" ];
-    ISplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<double>(3, 0, CultureInfo.CurrentCulture), Is.EqualTo(654789.123456D));
   }
@@ -410,7 +410,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericLong_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=654321987", "/verbose", "/par2=987641234"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<long>(3, 0), Is.EqualTo(987641234L));
   }
@@ -420,7 +420,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericFloat_IsTrue() {
     IEnumerable<string> Source = ["program.exe", string.Format("/par1=1236{0}2365", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator), "/verbose", string.Format("/par2=98764{0}1234", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<float>(3, 0, CultureInfo.CurrentCulture), Is.EqualTo(98764.1234F));
   }
@@ -431,7 +431,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_Pos3GenericDateTime_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=12/6/1998", "/verbose", "/par2=28/04/1966"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<DateTime>(3, DateTime.MinValue, CultureInfo.GetCultureInfo("FR-BE")), Is.EqualTo(new DateTime(1966, 4, 28)));
   }
@@ -445,7 +445,7 @@ public class SplitArgsTest {
   public void GetValue_KeyGenericDoubleCultureUs_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236.2365", "/verbose"];
     Logger.Dump(Source);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Logger.Dump(Args);
     Logger.Message("Get par1 as double");
@@ -462,7 +462,7 @@ public class SplitArgsTest {
   public void GetValue_KeyGenericFloatCultureUs_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236.23", "/verbose"];
     Logger.Dump(Source);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Logger.Dump(Args);
     Logger.Message("Get par1 as float");
@@ -479,7 +479,7 @@ public class SplitArgsTest {
   public void GetValue_KeyGenericIntCultureUs_IsFalse() {
     IEnumerable<string> Source = ["program.exe", "/par1=1,236,123", "/verbose"];
     Logger.Dump(Source);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Logger.Dump(Args);
     Logger.Message("Get par1 as int");
@@ -494,9 +494,11 @@ public class SplitArgsTest {
   ///</summary>
   [Test]
   public void GetValue_KeyGenericDateTimeCultureUs_IsTrue() {
-    IEnumerable<string> Source = ["program.exe", "/par1=6/12/1998", "/verbose"];
+    Logger.Message("Get value with DateTime in US format");
+    string[] Source = ["program.exe", "/par1=6/12/1998", "/verbose"];
     Logger.Dump(Source);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
+    Logger.Message("Parsing the source");
     Args.Parse(Source);
     Logger.Dump(Args);
     Logger.Message("Get par1 as DateTime");
@@ -515,7 +517,7 @@ public class SplitArgsTest {
   public void GetValue_PosGenericDoubleCultureUs_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236.2365", "/verbose"];
     Logger.Dump(Source);
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Logger.Dump(Args);
     Logger.Message("Get first arg as double");
@@ -530,7 +532,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericFloatCultureUs_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=1236.23", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<float>(1, 0, CultureInfo.GetCultureInfo("en-us")), Is.EqualTo(1236.23F));
   }
@@ -541,7 +543,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_PosGenericDateTimeCultureUs_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/par1=6/12/1998", "/verbose"];
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse(Source);
     Assert.That(Args.GetValue<DateTime>(1, DateTime.MinValue, CultureInfo.GetCultureInfo("en-us")), Is.EqualTo(new DateTime(1998, 6, 12)));
   }
@@ -553,7 +555,7 @@ public class SplitArgsTest {
   [Test]
   public void GetValue_KeyGenericStringCaseSensitive_IsTrue() {
     IEnumerable<string> Source = ["program.exe", "/Par1=val1", "/par1=val1b"];
-    SplitArgs Args = new SplitArgs() { IsCaseSensitive = true };
+    ISplitArgs Args = new TSplitArgs() { IsCaseSensitive = true };
     Args.Parse(Source);
     Assert.That(Args.GetValue<string>("Par1", ""), Is.EqualTo("val1"));
     Assert.That(Args.GetValue<string>("par1", ""), Is.EqualTo("val1b"));
@@ -561,19 +563,19 @@ public class SplitArgsTest {
 
   [Test]
   public void SplitArgs_OnlyKeyTestIndex_HasNoValue() {
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Assert.That(Args.HasValue(2), Is.False);
   }
 
   [Test]
   public void SplitArgs_OnlyKeyTestKey_HasNoValue() {
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Assert.That(Args.HasValue("test"), Is.False);
   }
 
   [Test]
   public void SplitArgs_OnlyKeyTestKey_HasValue() {
-    SplitArgs Args = new SplitArgs();
+    ISplitArgs Args = new TSplitArgs();
     Args.Parse("prog.exe test=value");
     Assert.That(Args.HasValue("test"), Is.True);
   }

@@ -49,4 +49,10 @@
 
 ### 7.2.2
 - Fixed again TAbout, when reading changelog and version
+
+### 7.2.3
+- Added some extensions methods for DateTime
+- Added some extensions methods for TimeSpan
+- Converted some extension mehods to new C# 12 syntax
+- started review of Dump
  
