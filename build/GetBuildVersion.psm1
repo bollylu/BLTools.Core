@@ -14,7 +14,7 @@ GetBuildVersion -VersionString "refs/heads/release/1.2.3-beta+42"
 Returns: "1.2.3-beta.42"
 
 .NOTES
-Supports .NET 8, 9, and 10 targeting.
+Supports .NET 8, 9, 10 and 11 targeting.
 #>
 function GetBuildVersion {
     param (

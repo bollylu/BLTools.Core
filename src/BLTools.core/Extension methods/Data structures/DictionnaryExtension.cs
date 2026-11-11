@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace BLTools.Core;
 
@@ -6,30 +6,32 @@ namespace BLTools.Core;
 /// Extension for dictionaries
 /// </summary>
 public static class DictionaryExtension {
+  extension<K, T>(IDictionary<K, T> source) {
 
-  /// <summary>
-  /// Get a value from a dictionay, with a default value in case of error
-  /// </summary>
-  /// <typeparam name="K">The type of the key</typeparam>
-  /// <typeparam name="T">The type of the requested value</typeparam>
-  /// <param name="source">The source dictionary</param>
-  /// <param name="key">The key</param>
-  /// <param name="defaultValue">The value to return in case of error</param>
-  /// <returns>The requested value or the default value in case of error</returns>
-  public static T? SafeGetValue<K, T>(this IDictionary<K, T> source, K? key, T? defaultValue) {
+    /// <summary>
+    /// Get a value from a dictionay, with a default value in case of error
+    /// </summary>
+    /// <typeparam name="K">The type of the key</typeparam>
+    /// <typeparam name="T">The type of the requested value</typeparam>
+    /// <param name="source">The source dictionary</param>
+    /// <param name="key">The key</param>
+    /// <param name="defaultValue">The value to return in case of error</param>
+    /// <returns>The requested value or the default value in case of error</returns>
+    public T? SafeGetValue(K? key, T? defaultValue) {
 
-    if (key is null) {
-      return defaultValue;
-    }
+      if (key is null) {
+        return defaultValue;
+      }
 
-    if (source is null || source.IsEmpty()) {
-      return defaultValue;
-    }
+      if (source is null || source.IsEmpty()) {
+        return defaultValue;
+      }
 
-    if (source.ContainsKey(key)) {
-      return source[key];
-    } else {
-      return defaultValue;
+      if (source.TryGetValue(key, out T? value)) {
+        return value;
+      } else {
+        return defaultValue;
+      }
     }
   }
 
@@ -42,14 +44,16 @@ public static class DictionaryExtension {
   //  return source.Count == 0;
   //}
 
-  public static string ListDictionaryItems(this IDictionary source, int indent = 2) {
-    StringBuilder RetVal = new();
-    int Index = 0;
-    foreach (DictionaryEntry DictItem in source) {
-      RetVal.AppendIndent($"[{Index++}] {GetDictionaryEntryAsString(DictItem)}", indent + 2);
-      RetVal.AppendLine();
+  extension(IDictionary source) {
+    public string ListDictionaryItems(int indent = 2) {
+      StringBuilder RetVal = new();
+      int Index = 0;
+      foreach (DictionaryEntry DictItem in source) {
+        RetVal.AppendIndent($"[{Index++}] {GetDictionaryEntryAsString(DictItem)}", indent + 2);
+        RetVal.AppendLine();
+      }
+      return RetVal.ToString();
     }
-    return RetVal.ToString();
   }
 
   private const string FIELDNAME_KEY = "Key";

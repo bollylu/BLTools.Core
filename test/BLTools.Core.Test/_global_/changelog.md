@@ -20,3 +20,6 @@
 ### 2.2.0
 - Fixed tests for TAbout
 - Added test for ansi color extensions
+
+### 2.3.0
+- Tests for .NET 10.x and .NET 11.x only

@@ -4,8 +4,8 @@ A comprehensive library of extension methods, utilities, and helper classes for 
 
 ## Supported Frameworks
 
-- .NET 9.x
 - .NET 10.x
+- .NET 11.x
 
 ## Features
 

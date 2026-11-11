@@ -49,4 +49,9 @@
 
 ### 7.2.2
 - Fixed again TAbout, when reading changelog and version
- 
+
+### 7.3.0
+- Added support for .NET 11.x
+- Removed support for .NET 9.x
+- _global_.changelog.md and _global_.version.txt are now used to generate the changelog and version information in TAbout
+- All extension methods converted to the new syntax extension(...) { ... }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using System.Text;
 
@@ -75,60 +75,68 @@ internal static class TMessageLoggerSupport {
     }
     return RetVal.ToString();
   }
+  extension(Type type) {
 
-  /// <summary>
-  /// Indicate if the type is a class or an interface
-  /// </summary>
-  /// <param name="type"></param>
-  /// <returns></returns>
-  internal static bool CanDigDeeper(this Type type) {
+    /// <summary>
+    /// Indicate if the type is a class or an interface
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    internal bool CanDigDeeper() {
 
-    if (type == typeof(string)) {
-      return false;
-    }
-
-    if (type == typeof(int) || type == typeof(long) || type == typeof(float) || type == typeof(double) || type == typeof(decimal) || type == typeof(byte)) {
-      return false;
-    }
-
-    if (type == typeof(uint) || type == typeof(ulong) || type == typeof(sbyte)) {
-      return false;
-    }
-
-    if (type == typeof(DateTime) || type == typeof(DateOnly) || type == typeof(TimeOnly)) {
-      return false;
-    }
-
-    if (type.IsValueType) {
-
-      if (type.IsEnum) {
+      if (type == typeof(string)) {
         return false;
       }
 
-      if (type.IsPrimitive) {
+      if (type == typeof(int) || type == typeof(long) || type == typeof(float) || type == typeof(double) || type == typeof(decimal) || type == typeof(byte)) {
         return false;
       }
 
-      return true;
+      if (type == typeof(uint) || type == typeof(ulong) || type == typeof(sbyte)) {
+        return false;
+      }
+
+      if (type == typeof(DateTime) || type == typeof(DateOnly) || type == typeof(TimeOnly)) {
+        return false;
+      }
+
+      if (type.IsValueType) {
+
+        if (type.IsEnum) {
+          return false;
+        }
+
+        if (type.IsPrimitive) {
+          return false;
+        }
+
+        return true;
+      }
+
+      return type.IsClass || type.IsInterface;
     }
 
-    return type.IsClass || type.IsInterface;
+
+    internal bool IsIEnumerable() {
+      return type.GetInterface(nameof(IEnumerable)) is not null;
+    }
+
+
+    internal bool CanDump() {
+      return type.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
+    }
   }
 
-  internal static bool IsIEnumerable(this Type type) {
-    return type.GetInterface(nameof(IEnumerable)) is not null;
+  extension(PropertyInfo propertyInfo) {
+    internal bool CanDump() {
+      return propertyInfo.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
+    }
   }
 
-  internal static bool CanDump(this Type type) {
-    return type.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
-  }
-
-  internal static bool CanDump(this PropertyInfo propertyInfo) {
-    return propertyInfo.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
-  }
-
-  internal static bool CanDump(this FieldInfo fieldInfo) {
-    return fieldInfo.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
+  extension(FieldInfo fieldInfo) {
+    internal bool CanDump() {
+      return fieldInfo.GetCustomAttribute(typeof(DoNotDumpAttribute)) is null;
+    }
   }
 
 }

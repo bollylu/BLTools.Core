@@ -26,7 +26,8 @@ public class TAbout : IAbout {
   public Version CurrentVersion { get => field ??= new Version(0, 0, 0); set; }
 
   /// <inheritdoc/>
-  public string ChangeLogSource { get; init; } = "_global_.changelog.md";
+  public string ChangeLogSourceMd { get; init; } = "_global_.changelog.md";
+  public string ChangeLogSourceTxt { get; init; } = "_global_.changelog.txt";
   /// <inheritdoc/>
   public string ChangeLog { get; set; } = string.Empty;
   #endregion --- Public properties ---------------------------------------------------------------------------
@@ -64,8 +65,8 @@ public class TAbout : IAbout {
       CurrentVersion = ReadVersion(VersionSource);
     }
 
-    if (ChangeLogSource is not null) {
-      ChangeLog = ReadChangeLog(ChangeLogSource);
+    if (ChangeLogSourceMd is not null) {
+      ChangeLog = ReadChangeLog(ChangeLogSourceMd);
     }
 
     _IsInitializing = false;
@@ -86,8 +87,17 @@ public class TAbout : IAbout {
     if (VersionSource is not null) {
       CurrentVersion = await ReadVersionAsync(VersionSource);
     }
-    if (ChangeLogSource is not null) {
-      ChangeLog = await ReadChangeLogAsync(ChangeLogSource);
+    if (ChangeLogSourceMd is null) {
+      if (ChangeLogSourceTxt is not null) {
+        ChangeLog = await ReadChangeLogAsync(ChangeLogSourceTxt);
+      }
+    } else {
+      ChangeLog = await ReadChangeLogAsync(ChangeLogSourceMd);
+      if (ChangeLog == "") {
+        if (ChangeLogSourceTxt is not null) {
+          ChangeLog = await ReadChangeLogAsync(ChangeLogSourceTxt);
+        }
+      }
     }
     _IsInitializing = false;
     _IsInitialized = true;
