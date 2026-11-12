@@ -89,18 +89,18 @@ public class TMoreData2 : IMoreData {
 
 
 
-public struct SPerson {
-  public string Name { get; set; }
+public record RPerson {
+  public string Name { get; set; } = string.Empty;
   public int Id { get; set; }
-  public IMoreData MoreData { get; set; }
+  public IMoreData? MoreData { get; set; }
 }
 
-public class TCustomers : List<SPerson> {
+public class TCustomers : List<RPerson> {
 }
 
 public class TContactFile {
   public TCustomers Customers { get; } = [
-    new SPerson() {Id=1, Name="Luc"},
-    new SPerson() {Id=2, Name="Brilly"}
+    new RPerson() {Id=1, Name="Luc"},
+    new RPerson() {Id=2, Name="Brilly"}
   ];
 }

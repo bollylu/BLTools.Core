@@ -10,7 +10,7 @@ public class ConsoleColorsTest {
 
     Logger.Message("Output of a message with ansi color codes");
     string Message = $"{"Hello dear ".FG_Red().BG_White()}{"Luc".FG_Green().BG_White()}.";
-    Assert.That(Message, Is.EqualTo("\u001b[47m\u001b[31mHello dear \u001b[0m\u001b[47m\u001b[32mLuc\u001b[0m."));
+    Assert.That(Message, Is.EqualTo($"{AnsiColorExtensions.ESC}{AnsiColorExtensions.BG_WHITE}{AnsiColorExtensions.ESC}{AnsiColorExtensions.FG_RED}Hello dear {AnsiColorExtensions.ESC}{AnsiColorExtensions.RESET}{AnsiColorExtensions.ESC}{AnsiColorExtensions.BG_WHITE}{AnsiColorExtensions.ESC}{AnsiColorExtensions.FG_GREEN}Luc{AnsiColorExtensions.ESC}{AnsiColorExtensions.RESET}."));
     Logger.Message(Message);
     Logger.Ok();
   }

@@ -47,7 +47,7 @@ public class DumpTest {
   public void BasicValueDumpTest() {
 
     using ILogger Logger = new TConsoleLogger<DumpTest>(TLoggerOptions.MessageOnly);
-
+    Logger.Header();
     TDemoData DemoData = new();
 
     SObjectDumpOptions Options = SObjectDumpOptions.Default;
@@ -90,7 +90,7 @@ public class DumpTest {
   public void ClassContentDumpTest() {
 
     using ILogger Logger = new TConsoleLogger<DumpTest>(TLoggerOptions.MessageOnly);
-
+    Logger.Header();
     Logger.Message($"Instanciate {nameof(TDemoData)}");
     TDemoData DemoData = new TDemoData();
 
@@ -106,7 +106,7 @@ public class DumpTest {
   public void ClassMultiContentDumpTest() {
 
     using ILogger Logger = new TConsoleLogger<DumpTest>(TLoggerOptions.MessageOnly);
-
+    Logger.Header();
     Logger.Message($"Instanciate {nameof(TContainerData)}");
     TContainerData Container = new();
 
@@ -124,7 +124,7 @@ public class DumpTest {
   public void BasicValueDumpBoxTest() {
 
     using ILogger Logger = new TConsoleLogger<DumpTest>(TLoggerOptions.MessageOnly);
-
+    Logger.Header();
     TDemoData DemoData = new();
 
     SObjectDumpOptions Options = SObjectDumpOptions.Default;

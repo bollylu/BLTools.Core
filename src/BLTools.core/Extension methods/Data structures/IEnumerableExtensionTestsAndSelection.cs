@@ -454,6 +454,7 @@ public static partial class IEnumerableExtension {
       return !source.Any();
     }
   }
+
   extension<T>(Span<T> source) {
 
     /// <summary>

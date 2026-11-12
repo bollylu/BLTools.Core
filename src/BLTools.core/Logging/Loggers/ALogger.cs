@@ -246,6 +246,10 @@ public abstract class ALogger<TSource> : ILogger, ILogger<TSource> where TSource
   protected const string MESSAGE_OK = "### Ok ###";
   protected const string MESSAGE_FAILED = "--- Failed ---";
 
+  public virtual void Header([CallerMemberName] string caller = "") {
+    Log($"=== {caller} ".AlignedLeft(120,'='), caller);
+  }
+
   public virtual void Message(string message, [CallerMemberName] string caller = "") {
     Log($"==> {message}", caller);
   }

@@ -15,6 +15,7 @@ public class IPAddressExtensionTest {
   ///</summary>
   [Test]
   public void GetSubnet_NetmaskAsIPAddress_ResultOk() {
+    Logger.Header();
     Logger.Message("Instanciate IP address");
     IPAddress ipAddress = new IPAddress([10, 100, 200, 28]);
     Logger.Dump(ipAddress);
@@ -40,9 +41,10 @@ public class IPAddressExtensionTest {
   ///</summary>
   [Test]
   public void GetSubnet_NetmaskAsByteArray_ResultOk() {
+    Logger.Header();
     IPAddress ipAddress = new IPAddress([10, 100, 200, 28]);
     Logger.Dump(ipAddress);
-    byte[] netmask = new byte[] { 255, 255, 255, 0 };
+    byte[] netmask = [255, 255, 255, 0];
     Logger.Dump(netmask);
     IPAddress expected = new IPAddress([10, 100, 200, 0]);
     Logger.Dump(expected);

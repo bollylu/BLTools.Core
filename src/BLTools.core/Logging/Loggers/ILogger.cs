@@ -56,6 +56,7 @@ public interface ILogger : IDisposable {
   #endregion --- LogFatal -----------------------------------------
 
   #region --- Special for tests --------------------------------------------
+  void Header([CallerMemberName] string caller = "");
   void Message(string message, [CallerMemberName] string caller = "");
   void Ok(string additionalInfo = "", [CallerMemberName] string caller = "");
   void Failed(Exception ex, [CallerMemberName] string caller = "");

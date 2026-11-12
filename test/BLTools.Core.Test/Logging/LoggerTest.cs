@@ -9,6 +9,7 @@ public class LoggerTest {
 
     using (ILogger Logger = new TConsoleLogger<LoggerTest>()) {
 
+      Logger.Header();
       Logger.Message("Created TConsoleLogger Default");
 
       Logger.Dump(Logger);
@@ -36,6 +37,7 @@ public class LoggerTest {
   [Test]
   public void BasicLoggerTest() {
     using (ILogger Logger = new TConsoleLogger<LoggerTest>(TLoggerOptions.Default)) {
+      Logger.Header();
       Logger.Message("Create TConsoleLogger");
 
       const string MESSAGE = "Message to the log";

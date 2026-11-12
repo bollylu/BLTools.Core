@@ -26,51 +26,8 @@ public static partial class NumberExtension {
           : (value.CompareTo(upperLimit) < 0 ? upperLimit : (value.CompareTo(lowerLimit) > 0 ? lowerLimit : value));
     }
   }
+
   extension(int value) {
-
-    ///// <summary>
-    ///// Verifies if a value is within limits (limits are included)
-    ///// </summary>
-    ///// <param name="value">The value to test</param>
-    ///// <param name="lowerLimit">The lower limit (included)</param>
-    ///// <param name="upperLimit">The upper limit (included)</param>
-    ///// <returns>true if value is within limits, false otherwise</returns>
-    //public static long WithinLimits(this long value, long lowerLimit, long upperLimit) {
-    //  return Max(lowerLimit, Min(upperLimit, value));
-    //}
-
-    ///// <summary>
-    ///// Verifies if a value is within limits (limits are included)
-    ///// </summary>
-    ///// <param name="value">The value to test</param>
-    ///// <param name="lowerLimit">The lower limit (included)</param>
-    ///// <param name="upperLimit">The upper limit (included)</param>
-    ///// <returns>true if value is within limits, false otherwise</returns>
-    //public static float WithinLimits(this float value, float lowerLimit, float upperLimit) {
-    //  return Max(lowerLimit, Min(upperLimit, value));
-    //}
-
-    ///// <summary>
-    ///// Verifies if a value is within limits (limits are included)
-    ///// </summary>
-    ///// <param name="value">The value to test</param>
-    ///// <param name="lowerLimit">The lower limit (included)</param>
-    ///// <param name="upperLimit">The upper limit (included)</param>
-    ///// <returns>true if value is within limits, false otherwise</returns>
-    //public static double WithinLimits(this double value, double lowerLimit, double upperLimit) {
-    //  return Max(lowerLimit, Min(upperLimit, value));
-    //}
-
-    ///// <summary>
-    ///// Verifies if a value is within limits (limits are included)
-    ///// </summary>
-    ///// <param name="value">The value to test</param>
-    ///// <param name="lowerLimit">The lower limit (included)</param>
-    ///// <param name="upperLimit">The upper limit (included)</param>
-    ///// <returns>true if value is within limits, false otherwise</returns>
-    //public static decimal WithinLimits(this decimal value, decimal lowerLimit, decimal upperLimit) {
-    //  return Max(lowerLimit, Min(upperLimit, value));
-    //}
 
     /// <summary>
     /// Calculate an aligned value on a specific frontier. Alignment is made towards zero.
@@ -95,6 +52,7 @@ public static partial class NumberExtension {
 
     }
   }
+
   extension(long value) {
 
     /// <summary>

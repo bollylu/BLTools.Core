@@ -10,6 +10,7 @@ public class TFileLoggerTest {
   public void InstanciateLogger() {
 
     using (ILogger Logger = new TFileLogger<LoggerTest>(LOG_FILENAME)) {
+      Logger.Header();
 
       Logger.Message("Created TConsoleLogger Default");
 
@@ -36,9 +37,8 @@ public class TFileLoggerTest {
 
   [Test]
   public void BasicLoggerTest() {
-
-
     using (ILogger Logger = new TFileLogger<LoggerTest>(LOG_FILENAME) { Options = TLoggerOptions.Default }) {
+      Logger.Header();
 
       TFileLogger<LoggerTest> FileLogger = (TFileLogger<LoggerTest>)Logger;
       FileLogger.ResetLog();

@@ -22,6 +22,7 @@ public static class ObjectExtension {
   }
 
   extension<T>(T data) {
+
     public string Dump([CallerArgumentExpression(nameof(data))] string? dataName = "") =>
       Dump(data, DEFAULT_DUMP_OPTIONS, dataName);
 
@@ -75,17 +76,16 @@ public static class ObjectExtension {
               StringBuilder Builder = new StringBuilder();
 
               if (options.MaxDepth > 1) {
-                Builder.AppendLine($"{data.GetType().GetNameEx()} {dataName.OrUnknown()} [{((IEnumerable<object>)EnumerableItems).Count()}] {{");
+                Builder.AppendLine($"{data.GetType().GetNameEx()} {dataName.OrUnknown()} [{EnumerableItems.Cast<object>().Count()}] {{");
                 foreach (var Item in EnumerableItems) {
                   Builder.AppendIndent(Item.Dump(options with { MaxDepth = options.MaxDepth - 1, WithTitle = true }), 2);
                 }
                 Builder.Append('}');
               } else {
-                Builder.AppendLine($"{data.GetType().GetNameEx()} {dataName.OrUnknown()} [{((IEnumerable<object>)EnumerableItems).Count()}] {VALUE_MORE}");
+                Builder.AppendLine($"{data.GetType().GetNameEx()} {dataName.OrUnknown()} [{EnumerableItems.Cast<object>().Count()}] {VALUE_MORE}");
               }
               return Builder.ToString();
             }
-
           case float FloatValue:
             return $"{data.GetType().GetNameEx()} {dataName.OrUnknown()} = {FloatValue.ToString(options.Culture.NumberFormat)}";
 
@@ -180,12 +180,12 @@ public static class ObjectExtension {
             }
 
           default: {
-              return $"{data.GetType().GetNameEx()} {dataName.OrUnknown()} = {data}";
+              return $"{data.GetType().GetNameEx()} {dataName.OrUnknown()} = {data.OrNull()}";
             }
         }
 
-      } catch (Exception ex) {
-        return $"Unable to dump {dataName?.WithQuotes().OrNull()} : {ex.Message}";
+      } catch {
+        return $"{data.GetType().GetNameEx()} {dataName.OrUnknown()} = {data.OrNull()}";
       }
 
     }

@@ -107,7 +107,7 @@ public class DiagnosticsTest_Dump {
   [Test]
   public void Dump_Struct() {
     Logger.Message("Building struct");
-    SPerson Target = new SPerson() { Id = 1, Name = "luc" };
+    RPerson Target = new RPerson() { Id = 1, Name = "luc" };
     Target.MoreData = new TMoreData2();
     Logger.Dump(Target);
     Logger.Ok();
@@ -116,10 +116,10 @@ public class DiagnosticsTest_Dump {
   [Test]
   public void Dump_ArrayOfStruct() {
     Logger.Message("Building struct");
-    SPerson P1 = new SPerson() { Id = 1, Name = "luc" };
+    RPerson P1 = new RPerson() { Id = 1, Name = "luc" };
     P1.MoreData = new TMoreData2();
-    SPerson P2 = new SPerson() { Id = 2, Name = "eric" };
-    SPerson[] Target = new SPerson[2];
+    RPerson P2 = new RPerson() { Id = 2, Name = "eric" };
+    RPerson[] Target = new RPerson[2];
     Target[0] = P1;
     Target[1] = P2;
     Logger.Dump(Target);
@@ -130,7 +130,7 @@ public class DiagnosticsTest_Dump {
   public void Dump_InheritedList() {
     Logger.Message("Building data");
     TContactFile Target = new TContactFile();
-    SPerson NewCustomer = new SPerson() { Id = 3, Name = "LeNouveau" };
+    RPerson NewCustomer = new RPerson() { Id = 3, Name = "LeNouveau" };
     NewCustomer.MoreData = new TMoreData();
     Target.Customers.Add(NewCustomer);
     Logger.Dump(Target);
