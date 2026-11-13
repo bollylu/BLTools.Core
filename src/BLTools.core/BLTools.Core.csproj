@@ -30,4 +30,8 @@
     <Compile Remove="Logging\LoggerHelper.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\readme.md" Link="readme.md" />
+  </ItemGroup>
+
 </Project>
